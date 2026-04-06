@@ -1,0 +1,7 @@
+# Files and directories to include when creating git worktrees.
+# One pattern per line. Supports glob patterns.
+# By default all files are included; list paths here to restrict inclusion.
+
+CLAUDE.md
+.claude/
+.mcp.json
