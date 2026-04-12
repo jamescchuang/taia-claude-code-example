@@ -1,0 +1,139 @@
+---
+name: twstock
+description: 查詢台灣股市即時股價。使用者輸入股票代號（如 2330 或 2330,2317,2454），取得當前股價、漲跌幅等資訊。支援逗號分隔一次查詢多支股票。Trigger when the user asks about Taiwan stock prices, stock quotes, or mentions a Taiwan stock code.
+---
+
+# 台灣股市即時股價查詢
+
+查詢台灣證券交易所（TWSE）及櫃買中心（OTC）的即時股價資訊。
+
+## When to Use This Skill
+
+Use this skill when the user:
+
+- 詢問台灣股票的即時股價（例如「2330 現在多少錢」）
+- 輸入台灣股票代號查詢行情
+- Says "查股價", "股票", "台股" or mentions a Taiwan stock code
+- Asks about Taiwan stock market prices
+
+## How to Execute
+
+### Step 1: Get the stock code(s)
+
+If the user hasn't provided a stock code, ask for one:
+
+> 請輸入要查詢的台灣股票代號（例如：2330，或用逗號分隔多支：2330,2317,2454）
+
+The user may provide multiple stock codes separated by commas (e.g., `2330,2317,2454`). Parse the input by splitting on commas and trimming whitespace.
+
+### Step 2: Fetch real-time stock data
+
+Use the TWSE MIS API to get real-time quotes. The API supports batch queries using `|` as a separator.
+
+**For multiple stocks, build the query by joining all codes with `|`:**
+
+First try all as TWSE (上市):
+
+```bash
+curl -s "https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_{CODE1}.tw|tse_{CODE2}.tw|tse_{CODE3}.tw"
+```
+
+The API returns results for all found stocks in `msgArray`. For any stock code NOT found in the TWSE response (missing from `msgArray`), retry that specific code as OTC (上櫃):
+
+```bash
+curl -s "https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=otc_{MISSING_CODE}.tw"
+```
+
+### Step 3: Parse the JSON response
+
+The API returns JSON with a `msgArray` field. Key fields in each item:
+
+| Field | Description |
+|-------|------------|
+| `c`   | 股票代號 |
+| `n`   | 股票名稱 |
+| `z`   | 當盤成交價（即時股價）|
+| `y`   | 昨收價 |
+| `o`   | 開盤價 |
+| `h`   | 最高價 |
+| `l`   | 最低價 |
+| `v`   | 累積成交量（張）|
+| `t`   | 最近成交時刻 |
+| `d`   | 日期 |
+
+If `z` is `"-"`, it means the stock has not yet traded today; display the last available price from `y` (昨收價) and note that the market may not be open.
+
+### Step 4: Calculate change and display
+
+Calculate:
+- **漲跌**: `z - y` (current price minus yesterday's close)
+- **漲跌幅**: `((z - y) / y) * 100`%
+
+### Step 5: Present results to the user
+
+**Single stock** — display as a detailed table:
+
+```
+## {股票名稱} ({股票代號})
+
+| 項目       | 數值        |
+|-----------|------------|
+| 即時股價    | {z}        |
+| 漲跌       | {change} ({change_pct}%) |
+| 開盤價     | {o}        |
+| 最高價     | {h}        |
+| 最低價     | {l}        |
+| 昨收價     | {y}        |
+| 成交量(張) | {v}        |
+| 更新時間   | {d} {t}    |
+```
+
+**Multiple stocks** — display as a summary comparison table, one row per stock:
+
+```
+| 股票       | 即時股價  | 漲跌          | 開盤    | 最高    | 最低    | 昨收    | 成交量(張) |
+|-----------|---------|--------------|--------|--------|--------|--------|-----------|
+| {n} ({c}) | {z}     | {change} ({change_pct}%) | {o} | {h} | {l} | {y} | {v} |
+```
+
+Then show the data update time once at the bottom.
+
+Use color indicators:
+- 上漲: prefix with a triangle up sign ▲
+- 下跌: prefix with a triangle down sign ▼
+- 平盤: show as "flat"
+
+## Error Handling
+
+- If `msgArray` is empty or missing for both `tse` and `otc`, tell the user the stock code may be invalid.
+- If the API is unreachable, inform the user that TWSE API may be temporarily unavailable (usually available during market hours: Mon-Fri 09:00-13:30 Taiwan time).
+- If `z` is `"-"`, show 昨收價 and note the market may not be open or the stock has not traded yet.
+
+## Example Interactions
+
+**Single stock:**
+
+**User:** /twstock 2330
+
+**You:**
+1. Run `curl -s "https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw"`
+2. Parse the JSON response
+3. Calculate change from yesterday
+4. Display the formatted detail table
+
+**Multiple stocks:**
+
+**User:** /twstock 2330,2317,2454
+
+**You:**
+1. Run `curl -s "https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw|tse_2317.tw|tse_2454.tw"`
+2. Check which codes are missing from the response; retry missing ones with `otc` prefix
+3. Parse all results, calculate changes
+4. Display the comparison summary table
+
+## Notes
+
+- Use Bash with `curl` to call the API directly — the response is JSON and can be parsed with `python3 -c` if needed.
+- The TWSE API is most reliable during Taiwan market hours (Mon-Fri 09:00-13:30 TST, UTC+8).
+- Support querying multiple stocks by separating codes with commas (e.g., `tse_2330.tw|tse_2317.tw`).
+- Always try `tse` first; if `msgArray` is empty, retry with `otc`.
