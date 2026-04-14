@@ -8,7 +8,7 @@
 
 ## 必用項目
 
-### 第 1、28、61、62 頁：課程 GitHub Repo
+### 第 1、26、60、61 頁：課程 GitHub Repo
 
 ```text
 https://github.com/jamescchuang/taia-claude-code-example
@@ -49,7 +49,7 @@ claude
 /init
 ```
 
-### 第 25、34 頁：模型切換
+### 第 30、31 頁：模型切換
 
 對話中切換模型：
 
@@ -83,7 +83,7 @@ export ANTHROPIC_MODEL="claude-sonnet-4-6"
 { "model": "opus" }
 ```
 
-### 第 45 頁：官方 Commands 文件
+### 第 43 頁：官方 Commands 文件
 
 ```text
 https://code.claude.com/docs/en/commands
@@ -91,7 +91,28 @@ https://code.claude.com/docs/en/commands
 
 ## 常用 Slash Commands 速查
 
-### 第 47、89 頁：會話與 Context 管理
+### 第 45 頁：設定與專案初始化
+
+```text
+/config
+/model
+/effort
+/fast
+/permissions
+/sandbox
+/login
+/logout
+/memory
+/init
+/add-dir
+/hooks
+/usage
+/extra-usage
+/upgrade
+/privacy-settings
+```
+
+### 第 46、87 頁：會話與 Context 管理
 
 ```text
 /clear
@@ -115,28 +136,7 @@ https://code.claude.com/docs/en/commands
 /terminal-setup
 ```
 
-### 第 48 頁：設定與專案初始化
-
-```text
-/config
-/model
-/effort
-/fast
-/permissions
-/sandbox
-/login
-/logout
-/memory
-/init
-/add-dir
-/hooks
-/usage
-/extra-usage
-/upgrade
-/privacy-settings
-```
-
-### 第 49 頁：開發工作流
+### 第 47 頁：開發工作流
 
 ```text
 /plan
@@ -157,7 +157,7 @@ https://code.claude.com/docs/en/commands
 /feedback
 ```
 
-### 第 50 頁：輸出與統計
+### 第 48 頁：輸出與統計
 
 ```text
 /copy [N]
@@ -174,7 +174,7 @@ https://code.claude.com/docs/en/commands
 /stickers
 ```
 
-### 第 51 頁：進階功能
+### 第 49 頁：進階功能
 
 ```text
 /agents
@@ -195,7 +195,7 @@ https://code.claude.com/docs/en/commands
 
 ## Skill 相關
 
-### 第 57、58 頁：建立自訂 Skill
+### 第 56、57 頁：建立自訂 Skill
 
 ```bash
 mkdir -p .claude/skills/my-skill/
@@ -212,7 +212,7 @@ mkdir -p .claude/skills/my-skill/
 ~/.claude/skills/
 ```
 
-### 第 60、77 頁：Skill Creator 安裝 / 參考來源
+### 第 59、76 頁：Skill Creator 安裝 / 參考來源
 
 ```bash
 claude plugin install skill-creator
@@ -225,7 +225,7 @@ https://github.com/anthropics/skills
 
 ## CLAUDE.md 與記憶功能
 
-### 第 92 頁：CLAUDE.md 常見位置
+### 第 90 頁：CLAUDE.md 常見位置
 
 ```text
 /Library/Application Support/ClaudeCode/
@@ -236,7 +236,7 @@ C:\Program Files\ClaudeCode
 ~/.claude/CLAUDE.md
 ```
 
-### 第 94、100、104 頁：直接寫入記憶
+### 第 92、102 頁：直接寫入記憶
 
 對話中可直接輸入：
 
@@ -254,7 +254,7 @@ C:\Program Files\ClaudeCode
 更新記憶
 ```
 
-### 第 95、96 頁：匯入與共用設定
+### 第 93、94 頁：匯入與共用設定
 
 ```text
 ln -s AGENTS.md CLAUDE.md
@@ -271,7 +271,7 @@ ln -s AGENTS.md CLAUDE.md
 .claude/rules/
 ```
 
-### 第 97、100 頁：Auto Memory 管理
+### 第 95、98 頁：Auto Memory 管理
 
 ```text
 /memory
