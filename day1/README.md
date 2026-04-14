@@ -1,4 +1,4 @@
-# Day 1 TAIA Claude Code 可複製貼上清單
+# Day 1 可複製貼上清單
 
 頁碼以 PowerPoint 投影片頁次為準。重複出現的內容已合併頁碼。
 
