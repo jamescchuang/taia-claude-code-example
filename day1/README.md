@@ -309,3 +309,7 @@ claude
 /compact
 /clear
 ```
+
+## 🤝 致謝 (Acknowledgements)
+
+特別感謝以 Wilson Hsiao 幫大家整理
