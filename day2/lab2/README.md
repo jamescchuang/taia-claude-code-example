@@ -1,4 +1,4 @@
-# Lab 2 - 招喚Claude Code更換頁面樣式
+# Lab 2 - 召喚Claude Code更換頁面樣式
 
 ## 示範應用程式 - 向量資料庫的管理及測試
 
@@ -11,6 +11,7 @@
 - 使用地端向量資料庫來儲存向量後的資料
 - 提供使用者索引資料夾中的檔案，儲存到向量資料庫
 - 提供查詢功能，回傳使用者指定的最接近資料數目
+- 這個範例程式使用 Python 開發，具備網頁功能及API服務
 
 ### 操作步驟
 
@@ -33,3 +34,20 @@
 5. 設計完成後，網頁將更新為新的設計
 
 ![alt text](image-2.png)
+
+### 參考：專案完整提示詞
+
+專案：**向量資料庫的管理及測試**
+
+提示詞：
+```
+請幫我初始化這個專案
+
+使用uv來管理python及venv
+
+使用fastapi與tailwind建立網頁應用程式，將參數均設計為可讓使用者改變，並讓使用者在網頁上進行查詢
+
+我需要一個 requirements.txt（包含 pymilvus, langchain, langchain-community, sentence-transformers, openai）以及一個 docker-compose.yml 來運行本地端 Milvus Standalone
+
+完成後請幫我執行 docker-compose up -d
+```
