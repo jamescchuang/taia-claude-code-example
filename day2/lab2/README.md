@@ -14,9 +14,13 @@
 套用這張圖片中的畫面設計風格，更新專案的前端網頁
 ```
 
-![alt text](image-1.png)
+例如，要套用的樣示圖片如下：
 
-4. Claude Code 自動進行重新設計
+![alt text](ai_portal.png)
+
+4. 在 Claude Code 中執行，Claude Code 自動進行重新設計
+
+![alt text](image-1.png)
 
 5. 設計完成後，網頁將更新為新的設計
 
