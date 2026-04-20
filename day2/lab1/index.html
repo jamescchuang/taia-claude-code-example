@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>台積電 2330 即時股價</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --card: #1a2332;
+      --border: #2d3a4e;
+      --text: #e4e7eb;
+      --muted: #8a95a5;
+      --up: #ef4444;      /* 台股習慣：紅漲 */
+      --down: #22c55e;    /* 台股習慣：綠跌 */
+      --accent: #3b82f6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang TC",
+                   "Microsoft JhengHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 640px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 2px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .stock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 24px;
+    }
+
+    .stock-name {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .stock-code {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .market-status {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent);
+    }
+
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-size: 56px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .change {
+      font-size: 18px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .up { color: var(--up); }
+    .down { color: var(--down); }
+    .flat { color: var(--muted); }
+
+    .time {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+    }
+
+    .cell {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cell-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .cell-value {
+      font-size: 16px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    button:hover:not(:disabled) {
+      background: var(--border);
+      border-color: var(--accent);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    button.primary:hover:not(:disabled) {
+      background: #2563eb;
+    }
+
+    .error {
+      color: var(--up);
+      font-size: 13px;
+      margin-top: 16px;
+      padding: 12px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      display: none;
+    }
+
+    .error.show { display: block; }
+
+    .loading {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 480px) {
+      .price { font-size: 42px; }
+      .stock-name { font-size: 22px; }
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .card { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>TAIWAN STOCK</h1>
+    </header>
+
+    <div class="card" id="card">
+      <div class="stock-header">
+        <div>
+          <div class="stock-name" id="name">台積電</div>
+          <div class="stock-code" id="code">2330 · TSE</div>
+        </div>
+        <div class="market-status" id="status">載入中…</div>
+      </div>
+
+      <div class="price-row">
+        <span class="price" id="price">—</span>
+        <span class="change" id="change">—</span>
+      </div>
+
+      <div class="time" id="time">尚未更新</div>
+
+      <div class="grid">
+        <div class="cell">
+          <span class="cell-label">開盤</span>
+          <span class="cell-value" id="open">—</span>
+        </div>
+        <div class="cell">
+          <span class="cell-label">最高</span>
+          <span class="cell-value" id="high">—</span>
+        </div>
+        <div class="cell">
+          <span class="cell-label">最低</span>
+          <span class="cell-value" id="low">—</span>
+        </div>
+        <div class="cell">
+          <span class="cell-label">昨收</span>
+          <span class="cell-value" id="yesterday">—</span>
+        </div>
+        <div class="cell">
+          <span class="cell-label">成交量（張）</span>
+          <span class="cell-value" id="volume">—</span>
+        </div>
+        <div class="cell">
+          <span class="cell-label">買／賣</span>
+          <span class="cell-value" id="bidask">—</span>
+        </div>
+      </div>
+
+      <div class="error" id="error"></div>
+
+      <div class="actions">
+        <button id="refreshBtn" class="primary">重新整理</button>
+        <button id="autoBtn">開啟自動更新</button>
+      </div>
+    </div>
+
+    <footer>
+      資料來源：台灣證券交易所 MIS · 僅供參考，不構成投資建議
+    </footer>
+  </div>
+
+  <script>
+    const STOCK_CODE = '2330';
+    const STOCK_CHANNEL = `tse_${STOCK_CODE}.tw`;
+    // TWSE MIS 端點不允許 CORS，統一透過公開的 CORS 代理呼叫
+    const buildTwseUrl = () =>
+      `https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=${STOCK_CHANNEL}&json=1&delay=0&_=${Date.now()}`;
+    // 多個代理備援（依序嘗試）
+    const PROXIES = [
+      (u) => `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}`,
+      (u) => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+      (u) => `https://cors.eu.org/${u}`,
+    ];
+
+    const el = (id) => document.getElementById(id);
+    const fmt = (n, d = 2) => {
+      const v = Number(n);
+      if (!isFinite(v)) return '—';
+      return v.toLocaleString('zh-TW', {
+        minimumFractionDigits: d,
+        maximumFractionDigits: d,
+      });
+    };
+    const fmtInt = (n) => {
+      const v = Number(n);
+      if (!isFinite(v)) return '—';
+      return v.toLocaleString('zh-TW');
+    };
+
+    async function fetchStock() {
+      const card = el('card');
+      const errBox = el('error');
+      const refreshBtn = el('refreshBtn');
+
+      card.classList.add('loading');
+      refreshBtn.disabled = true;
+      errBox.classList.remove('show');
+
+      const url = buildTwseUrl();
+      let lastErr = null;
+
+      for (const mkProxy of PROXIES) {
+        try {
+          const res = await fetch(mkProxy(url), { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const text = (await res.text()).trim();
+          const jsonStart = text.indexOf('{');
+          if (jsonStart < 0) throw new Error('回應非 JSON');
+          const data = JSON.parse(text.slice(jsonStart));
+          const info = data?.msgArray?.[0];
+          if (!info) throw new Error('API 未回傳資料');
+
+          render(info);
+          card.classList.remove('loading');
+          refreshBtn.disabled = false;
+          return;
+        } catch (err) {
+          lastErr = err;
+          // 換下一個代理繼續嘗試
+        }
+      }
+
+      errBox.textContent = `無法取得股價資料：${lastErr?.message || '未知錯誤'}。所有 CORS 代理皆失敗，請稍後再試。`;
+      errBox.classList.add('show');
+      card.classList.remove('loading');
+      refreshBtn.disabled = false;
+    }
+
+    function render(info) {
+      // 欄位說明:
+      // n: 名稱, z: 成交價, y: 昨收, o: 開盤, h: 最高, l: 最低,
+      // v: 成交量(張), t: 時間, d: 日期, a: 五檔賣, b: 五檔買,
+      // tlong: 毫秒時間戳
+      // 注意：z 可能為 "-"（撮合間隔或開盤前），此時用買一/賣一中位數作為參考價
+      const topBid = parseFloat((info.b || '').split('_')[0]);
+      const topAsk = parseFloat((info.a || '').split('_')[0]);
+
+      let price = parseFloat(info.z);
+      let priceIsReference = false;
+      if (!isFinite(price)) {
+        if (isFinite(topBid) && isFinite(topAsk)) {
+          price = (topBid + topAsk) / 2;
+          priceIsReference = true;
+        }
+      }
+      const prevClose = parseFloat(info.y);
+      const hasPrice = isFinite(price);
+
+      const change = hasPrice ? price - prevClose : NaN;
+      const changePct = hasPrice && prevClose ? (change / prevClose) * 100 : NaN;
+
+      el('name').textContent = info.n || '台積電';
+      el('code').textContent = `${info.c || STOCK_CODE} · ${(info.ex || 'tse').toUpperCase()}`;
+
+      el('price').textContent = hasPrice
+        ? (priceIsReference ? `${fmt(price)} *` : fmt(price))
+        : '—';
+
+      const dir = !isFinite(change) ? 'flat' : change > 0 ? 'up' : change < 0 ? 'down' : 'flat';
+      const arrow = dir === 'up' ? '▲' : dir === 'down' ? '▼' : '—';
+      const sign = change > 0 ? '+' : '';
+      el('change').className = `change ${dir}`;
+      el('price').className = `price ${dir}`;
+      el('change').textContent = isFinite(change)
+        ? `${arrow} ${sign}${fmt(change)} (${sign}${fmt(changePct)}%)`
+        : '—';
+
+      el('open').textContent = fmt(info.o);
+      el('high').textContent = fmt(info.h);
+      el('low').textContent = fmt(info.l);
+      el('yesterday').textContent = fmt(info.y);
+      el('volume').textContent = fmtInt(info.v);
+
+      el('bidask').textContent = isFinite(topBid) && isFinite(topAsk)
+        ? `${fmt(topBid)} / ${fmt(topAsk)}`
+        : '—';
+
+      // 時間：d=YYYYMMDD, t=HH:MM:SS
+      const d = info.d || '';
+      const t = info.t || '';
+      const dateStr = d.length === 8 ? `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}` : '';
+      el('time').textContent = dateStr || t ? `更新時間：${dateStr} ${t}` : '尚未更新';
+
+      // 盤中/收盤狀態判斷
+      const now = new Date();
+      const hours = now.getHours();
+      const day = now.getDay();
+      const isWeekday = day >= 1 && day <= 5;
+      const inSession = isWeekday && (hours > 9 || (hours === 9)) && hours < 14;
+      el('status').textContent = inSession ? '盤中' : '非交易時段';
+    }
+
+    // 自動更新切換
+    let autoTimer = null;
+    el('autoBtn').addEventListener('click', () => {
+      const btn = el('autoBtn');
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+        btn.textContent = '開啟自動更新';
+      } else {
+        autoTimer = setInterval(fetchStock, 15000);
+        btn.textContent = '停止自動更新（15s）';
+      }
+    });
+
+    el('refreshBtn').addEventListener('click', fetchStock);
+
+    // 首次載入
+    fetchStock();
+  </script>
+</body>
+</html>
