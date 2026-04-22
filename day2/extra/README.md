@@ -14,7 +14,7 @@ UI UX Pro Max 是一個開源的 AI 設計技能（AI Skill），專為各種 AI
 
 安裝方式透過官方的 uipro-cli 一行指令即可整合到 Claude Code、Cursor、Windsurf、Copilot、Gemini CLI、Trae 等近 20 款 AI 開發工具。目前 GitHub 已累積約 68.9k stars，採用 MIT 授權。
 
-UI UX Pro Max 受到關注及歡迎，目前在 GitHub 上已獲約 7 萬顆星的評價。
+UI UX Pro Max ([https://github.com/nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill))受到關注及歡迎，目前在 GitHub 上已獲約 7 萬顆星的評價。
 
 ---
 

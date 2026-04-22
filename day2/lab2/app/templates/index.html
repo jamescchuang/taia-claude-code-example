@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vector DB Lab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen">
+  <header class="bg-slate-900 text-white">
+    <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+      <h1 class="text-xl font-semibold">Vector DB Lab · Milvus Lite</h1>
+      <span class="text-xs text-slate-300">FastAPI + Tailwind + SentenceTransformers</span>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Index panel -->
+    <section class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-lg font-semibold mb-4">1. 索引資料夾</h2>
+      <p class="text-xs text-slate-500 mb-3">支援 .txt / .md / .pdf / .py / .json / .csv / .log 等檔案（遞迴掃描）</p>
+      <form id="index-form" class="space-y-3">
+        <label class="block">
+          <span class="text-sm font-medium">資料夾路徑</span>
+          <input name="folder" value="{{ default_folder }}" class="mt-1 w-full border rounded px-3 py-2" />
+        </label>
+        <label class="block">
+          <span class="text-sm font-medium">Collection 名稱</span>
+          <input name="collection" value="documents" class="mt-1 w-full border rounded px-3 py-2" />
+        </label>
+        <label class="block">
+          <span class="text-sm font-medium">Embedding 模型</span>
+          <input name="embedding_model" value="sentence-transformers/all-MiniLM-L6-v2" class="mt-1 w-full border rounded px-3 py-2" />
+        </label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="block">
+            <span class="text-sm font-medium">Chunk size</span>
+            <input name="chunk_size" type="number" value="500" min="50" max="4000" class="mt-1 w-full border rounded px-3 py-2" />
+          </label>
+          <label class="block">
+            <span class="text-sm font-medium">Chunk overlap</span>
+            <input name="chunk_overlap" type="number" value="50" min="0" max="1000" class="mt-1 w-full border rounded px-3 py-2" />
+          </label>
+        </div>
+        <label class="inline-flex items-center gap-2">
+          <input type="checkbox" name="recreate" class="rounded" />
+          <span class="text-sm">重建 collection（刪除舊資料）</span>
+        </label>
+        <button class="w-full bg-slate-900 text-white rounded py-2 hover:bg-slate-700">建立索引</button>
+      </form>
+      <pre id="index-status" class="mt-4 text-sm bg-slate-50 rounded p-3 min-h-[3rem] whitespace-pre-wrap"></pre>
+    </section>
+
+    <!-- Query panel -->
+    <section class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-lg font-semibold mb-4">2. 查詢</h2>
+      <form id="query-form" class="space-y-3">
+        <label class="block">
+          <span class="text-sm font-medium">查詢內容</span>
+          <textarea name="query" rows="3" class="mt-1 w-full border rounded px-3 py-2" placeholder="輸入要查詢的問題或關鍵字…"></textarea>
+        </label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="block">
+            <span class="text-sm font-medium">Collection</span>
+            <input name="collection" value="documents" class="mt-1 w-full border rounded px-3 py-2" />
+          </label>
+          <label class="block">
+            <span class="text-sm font-medium">Top K</span>
+            <input name="top_k" type="number" value="5" min="1" max="50" class="mt-1 w-full border rounded px-3 py-2" />
+          </label>
+        </div>
+        <label class="block">
+          <span class="text-sm font-medium">Embedding 模型</span>
+          <input name="embedding_model" value="sentence-transformers/all-MiniLM-L6-v2" class="mt-1 w-full border rounded px-3 py-2" />
+        </label>
+        <button class="w-full bg-emerald-700 text-white rounded py-2 hover:bg-emerald-600">查詢</button>
+      </form>
+      <div id="results" class="mt-4 space-y-3"></div>
+    </section>
+
+    <!-- Collections panel -->
+    <section class="bg-white rounded-xl shadow p-6 lg:col-span-2">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold">Collections</h2>
+        <button id="refresh-collections" class="text-sm text-slate-600 hover:text-slate-900 underline">重新整理</button>
+      </div>
+      <ul id="collections" class="divide-y"></ul>
+    </section>
+  </main>
+
+  <script>
+    const $ = (sel) => document.querySelector(sel);
+
+    function formData(form) {
+      const data = Object.fromEntries(new FormData(form).entries());
+      if ("chunk_size" in data) data.chunk_size = Number(data.chunk_size);
+      if ("chunk_overlap" in data) data.chunk_overlap = Number(data.chunk_overlap);
+      if ("top_k" in data) data.top_k = Number(data.top_k);
+      data.recreate = form.recreate?.checked ?? false;
+      return data;
+    }
+
+    async function postJSON(url, body) {
+      const r = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.detail || r.statusText);
+      return j;
+    }
+
+    async function loadCollections() {
+      const r = await fetch("/api/collections");
+      const j = await r.json();
+      const ul = $("#collections");
+      ul.innerHTML = "";
+      if (!j.collections.length) {
+        ul.innerHTML = '<li class="py-2 text-slate-500 text-sm">尚無 collection</li>';
+        return;
+      }
+      for (const name of j.collections) {
+        const li = document.createElement("li");
+        li.className = "py-2 flex items-center justify-between";
+        li.innerHTML = `<span class="font-mono text-sm">${name}</span>
+          <button class="text-red-600 text-sm hover:underline" data-name="${name}">刪除</button>`;
+        li.querySelector("button").addEventListener("click", async () => {
+          if (!confirm(`刪除 ${name} ?`)) return;
+          await fetch(`/api/collections/${encodeURIComponent(name)}`, { method: "DELETE" });
+          loadCollections();
+        });
+        ul.appendChild(li);
+      }
+    }
+
+    $("#refresh-collections").addEventListener("click", loadCollections);
+
+    $("#index-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const status = $("#index-status");
+      status.textContent = "索引中… (首次下載 embedding 模型可能需要幾分鐘)";
+      try {
+        const res = await postJSON("/api/index", formData(e.target));
+        status.textContent = `✅ 已索引 ${res.indexed_chunks} 個片段到 "${res.collection}"`;
+        loadCollections();
+      } catch (err) {
+        status.textContent = "❌ " + err.message;
+      }
+    });
+
+    $("#query-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const box = $("#results");
+      box.innerHTML = '<p class="text-slate-500 text-sm">查詢中…</p>';
+      try {
+        const res = await postJSON("/api/query", formData(e.target));
+        if (!res.results.length) {
+          box.innerHTML = '<p class="text-slate-500 text-sm">沒有結果</p>';
+          return;
+        }
+        box.innerHTML = "";
+        res.results.forEach((hit, i) => {
+          const card = document.createElement("div");
+          card.className = "border rounded p-3 bg-slate-50";
+          card.innerHTML = `
+            <div class="flex justify-between text-xs text-slate-500 mb-1">
+              <span>#${i + 1} · ${hit.source}</span>
+              <span>score: ${hit.score.toFixed(4)}</span>
+            </div>
+            <div class="text-sm whitespace-pre-wrap">${hit.text.replace(/</g, "&lt;")}</div>`;
+          box.appendChild(card);
+        });
+      } catch (err) {
+        box.innerHTML = `<p class="text-red-600 text-sm">❌ ${err.message}</p>`;
+      }
+    });
+
+    loadCollections();
+  </script>
+</body>
+</html>

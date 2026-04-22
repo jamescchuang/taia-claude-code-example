@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Veritas — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ===== Tokens ============================================== */
+  :root {
+    /* Colors — Primary (Trust Ink — 以深藍為主，偏暖以避免冰冷) */
+    --primary-50:  oklch(0.972 0.015 255);
+    --primary-100: oklch(0.935 0.035 255);
+    --primary-200: oklch(0.870 0.070 253);
+    --primary-300: oklch(0.780 0.105 252);
+    --primary-400: oklch(0.670 0.135 250);
+    --primary-500: oklch(0.555 0.150 248);
+    --primary-600: oklch(0.450 0.140 248);
+    --primary-700: oklch(0.360 0.120 248);
+    --primary-800: oklch(0.275 0.090 248);
+    --primary-900: oklch(0.190 0.060 248);
+
+    /* Colors — Secondary (Ledger Clay — 溫潤赭土，中和藍的冷感) */
+    --secondary-50:  oklch(0.975 0.018 60);
+    --secondary-100: oklch(0.945 0.035 60);
+    --secondary-200: oklch(0.890 0.060 58);
+    --secondary-300: oklch(0.810 0.090 55);
+    --secondary-400: oklch(0.715 0.115 50);
+    --secondary-500: oklch(0.625 0.115 45);
+    --secondary-600: oklch(0.525 0.100 42);
+    --secondary-700: oklch(0.425 0.080 42);
+    --secondary-800: oklch(0.325 0.060 42);
+    --secondary-900: oklch(0.230 0.040 42);
+
+    /* Colors — Neutral (Warm Slate — 微暖灰，避免純冷灰) */
+    --neutral-50:  oklch(0.985 0.003 60);
+    --neutral-100: oklch(0.960 0.005 60);
+    --neutral-200: oklch(0.915 0.007 60);
+    --neutral-300: oklch(0.855 0.010 60);
+    --neutral-400: oklch(0.720 0.012 60);
+    --neutral-500: oklch(0.580 0.012 60);
+    --neutral-600: oklch(0.460 0.010 60);
+    --neutral-700: oklch(0.360 0.008 60);
+    --neutral-800: oklch(0.265 0.006 60);
+    --neutral-900: oklch(0.175 0.005 60);
+
+    /* Colors — Semantic */
+    --success-50:  oklch(0.970 0.025 150);
+    --success-100: oklch(0.930 0.055 150);
+    --success-200: oklch(0.870 0.095 150);
+    --success-300: oklch(0.785 0.130 150);
+    --success-400: oklch(0.680 0.150 150);
+    --success-500: oklch(0.570 0.150 148);
+    --success-600: oklch(0.470 0.135 146);
+    --success-700: oklch(0.380 0.115 146);
+    --success-800: oklch(0.290 0.085 146);
+    --success-900: oklch(0.205 0.055 146);
+
+    --warning-50:  oklch(0.978 0.025 85);
+    --warning-100: oklch(0.950 0.055 85);
+    --warning-200: oklch(0.905 0.095 82);
+    --warning-300: oklch(0.840 0.130 78);
+    --warning-400: oklch(0.770 0.150 75);
+    --warning-500: oklch(0.705 0.150 72);
+    --warning-600: oklch(0.595 0.135 65);
+    --warning-700: oklch(0.475 0.115 58);
+    --warning-800: oklch(0.355 0.085 52);
+    --warning-900: oklch(0.245 0.060 48);
+
+    --error-50:  oklch(0.975 0.020 25);
+    --error-100: oklch(0.940 0.045 25);
+    --error-200: oklch(0.885 0.085 25);
+    --error-300: oklch(0.800 0.130 25);
+    --error-400: oklch(0.700 0.165 27);
+    --error-500: oklch(0.595 0.185 28);
+    --error-600: oklch(0.495 0.170 28);
+    --error-700: oklch(0.400 0.140 28);
+    --error-800: oklch(0.305 0.105 28);
+    --error-900: oklch(0.215 0.070 28);
+
+    --info-50:  oklch(0.972 0.020 230);
+    --info-100: oklch(0.935 0.045 230);
+    --info-200: oklch(0.875 0.080 230);
+    --info-300: oklch(0.790 0.110 230);
+    --info-400: oklch(0.685 0.130 230);
+    --info-500: oklch(0.580 0.140 230);
+    --info-600: oklch(0.480 0.125 230);
+    --info-700: oklch(0.385 0.105 230);
+    --info-800: oklch(0.290 0.075 230);
+    --info-900: oklch(0.200 0.050 230);
+
+    /* Spacing (4px base) */
+    --space-0: 0;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+    --space-8: 64px;
+    --space-9: 96px;
+
+    /* Radius */
+    --radius-none: 0;
+    --radius-sm:   2px;
+    --radius-md:   6px;
+    --radius-lg:   10px;
+    --radius-xl:   16px;
+    --radius-2xl:  24px;
+    --radius-full: 9999px;
+
+    /* Shadows (conservative — 法遵產業偏嚴謹) */
+    --shadow-sm: 0 1px 2px oklch(0.190 0.060 248 / 0.06);
+    --shadow-md: 0 2px 6px oklch(0.190 0.060 248 / 0.08), 0 1px 2px oklch(0.190 0.060 248 / 0.04);
+    --shadow-lg: 0 8px 20px oklch(0.190 0.060 248 / 0.10), 0 2px 6px oklch(0.190 0.060 248 / 0.06);
+
+    /* Motion */
+    --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    --duration-fast: 120ms;
+    --duration-base: 180ms;
+
+    /* Type system */
+    --font-sans: "IBM Plex Sans", ui-sans-serif, -apple-system, "Segoe UI", sans-serif;
+    --font-serif: "IBM Plex Serif", ui-serif, Georgia, serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    /* Semantic application tokens */
+    --bg-canvas: var(--neutral-50);
+    --bg-surface: #ffffff;
+    --bg-subtle: var(--neutral-100);
+    --border-default: var(--neutral-200);
+    --border-strong: var(--neutral-300);
+    --text-primary: var(--neutral-900);
+    --text-secondary: var(--neutral-700);
+    --text-muted: var(--neutral-500);
+    --accent: var(--primary-600);
+  }
+
+  /* ===== Base =============================================== */
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+    background: var(--bg-canvas);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    line-height: 1.55;
+  }
+
+  /* Typography scale */
+  .type-display { font-family: var(--font-serif); font-size: 56px; font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; }
+  .type-h1      { font-family: var(--font-serif); font-size: 40px; font-weight: 600; line-height: 1.15; letter-spacing: -0.015em; }
+  .type-h2      { font-family: var(--font-sans);  font-size: 28px; font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; }
+  .type-h3      { font-family: var(--font-sans);  font-size: 20px; font-weight: 600; line-height: 1.3; }
+  .type-body    { font-family: var(--font-sans);  font-size: 16px; font-weight: 400; line-height: 1.6; }
+  .type-caption { font-family: var(--font-sans);  font-size: 13px; font-weight: 400; line-height: 1.5; color: var(--text-muted); letter-spacing: 0.01em; }
+  .type-code    { font-family: var(--font-mono);  font-size: 14px; font-weight: 400; line-height: 1.55; }
+
+  /* Layout */
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-6);
+  }
+  header.masthead {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-6);
+    padding-bottom: var(--space-6);
+    margin-bottom: var(--space-8);
+    border-bottom: 1px solid var(--border-default);
+  }
+  header.masthead .brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .brand-mark {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--primary-700), var(--primary-500));
+    display: grid; place-items: center;
+    color: white;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+  }
+  .brand-meta { display: flex; flex-direction: column; }
+  .brand-meta .name { font-weight: 600; font-size: 17px; }
+  .brand-meta .tag  { font-size: 13px; color: var(--text-muted); }
+  .masthead-meta { text-align: right; font-size: 13px; color: var(--text-muted); }
+  .masthead-meta code { font-family: var(--font-mono); color: var(--text-secondary); }
+
+  section.group {
+    padding: var(--space-7) 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+  section.group:last-child { border-bottom: none; }
+  .group-header {
+    display: flex; align-items: baseline; gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+  .group-header .kicker {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .group-header h2 {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .group-header p {
+    margin: 0; color: var(--text-secondary); font-size: 15px;
+  }
+
+  /* Color scales */
+  .scale-title {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: var(--space-5) 0 var(--space-3);
+  }
+  .scale-title h3 { margin: 0; font-size: 15px; font-weight: 600; }
+  .scale-title .desc { font-size: 13px; color: var(--text-muted); }
+  .scale {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 2px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border-default);
+  }
+  .swatch {
+    aspect-ratio: 1.6 / 1;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: var(--space-2) var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.3;
+  }
+  .swatch .step { font-weight: 500; }
+  .swatch .hex  { opacity: 0.75; font-size: 10px; margin-top: 2px; }
+
+  /* Type specimen */
+  .type-specimen {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: var(--space-4) var(--space-5);
+    align-items: baseline;
+  }
+  .type-specimen .label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .type-specimen .specimen { color: var(--text-primary); }
+  .type-specimen .meta { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* Spacing specimen */
+  .tokens-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); }
+  .token-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+  }
+  .token-card h3 { margin: 0 0 var(--space-4); font-size: 15px; font-weight: 600; }
+  .token-row {
+    display: grid;
+    grid-template-columns: 70px 70px 1fr;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-2) 0;
+    border-bottom: 1px dashed var(--border-default);
+  }
+  .token-row:last-child { border-bottom: none; }
+  .token-row .name { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
+  .token-row .value { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+  .bar { height: 12px; border-radius: var(--radius-sm); background: var(--primary-400); }
+  .radius-demo { height: 44px; border: 1.5px solid var(--primary-500); background: var(--primary-50); }
+
+  /* Component demos */
+  .components-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+  .demo {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+  }
+  .demo-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: var(--space-4);
+  }
+  .demo-head h3 { margin: 0; font-size: 15px; font-weight: 600; }
+  .demo-head .kind { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.04em; text-transform: uppercase; }
+  .demo-row { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+  .demo-row + .demo-row { margin-top: var(--space-3); }
+
+  /* Button component ===== */
+  .btn {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    transition: background var(--duration-fast) var(--ease-standard),
+                border-color var(--duration-fast) var(--ease-standard),
+                color var(--duration-fast) var(--ease-standard),
+                box-shadow var(--duration-fast) var(--ease-standard);
+  }
+  .btn:focus-visible {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+  }
+  .btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+
+  .btn--primary {
+    background: var(--primary-600);
+    color: white;
+  }
+  .btn--primary:hover:not([disabled]) { background: var(--primary-700); }
+  .btn--primary:active:not([disabled]) { background: var(--primary-800); }
+
+  .btn--secondary {
+    background: var(--bg-surface);
+    color: var(--primary-700);
+    border-color: var(--primary-200);
+  }
+  .btn--secondary:hover:not([disabled]) { background: var(--primary-50); border-color: var(--primary-300); }
+  .btn--secondary:active:not([disabled]) { background: var(--primary-100); }
+
+  .btn--ghost {
+    background: transparent;
+    color: var(--text-secondary);
+  }
+  .btn--ghost:hover:not([disabled]) { background: var(--neutral-100); color: var(--text-primary); }
+
+  .btn--destructive {
+    background: var(--error-600);
+    color: white;
+  }
+  .btn--destructive:hover:not([disabled]) { background: var(--error-700); }
+
+  .btn--sm { padding: 6px 12px; font-size: 13px; }
+  .btn--lg { padding: 14px 22px; font-size: 15px; }
+
+  /* Input component ===== */
+  .field { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+  .field label {
+    font-size: 13px; font-weight: 500; color: var(--text-secondary);
+  }
+  .field .hint { font-size: 12px; color: var(--text-muted); }
+  .field .error-text { font-size: 12px; color: var(--error-600); }
+  .input {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+  }
+  .input::placeholder { color: var(--neutral-400); }
+  .input:hover { border-color: var(--neutral-400); }
+  .input:focus {
+    outline: none;
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px oklch(0.555 0.150 248 / 0.15);
+  }
+  .input[data-state="error"] {
+    border-color: var(--error-500);
+  }
+  .input[data-state="error"]:focus {
+    box-shadow: 0 0 0 3px oklch(0.595 0.185 28 / 0.18);
+  }
+
+  /* Card component ===== */
+  .card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .card-head {
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--border-default);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-head h4 { margin: 0; font-size: 15px; font-weight: 600; }
+  .card-body { padding: var(--space-5); color: var(--text-secondary); font-size: 14px; }
+  .card-foot {
+    padding: var(--space-3) var(--space-5);
+    border-top: 1px solid var(--border-default);
+    background: var(--bg-subtle);
+    display: flex; justify-content: flex-end; gap: var(--space-2);
+  }
+
+  /* Badge component ===== */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    line-height: 1.4;
+    border: 1px solid transparent;
+  }
+  .badge::before {
+    content: "";
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor;
+    opacity: 0.85;
+  }
+  .badge--neutral { background: var(--neutral-100); color: var(--neutral-700); border-color: var(--neutral-200); }
+  .badge--success { background: var(--success-50); color: var(--success-700); border-color: var(--success-200); }
+  .badge--warning { background: var(--warning-50); color: var(--warning-700); border-color: var(--warning-200); }
+  .badge--error   { background: var(--error-50);   color: var(--error-700);   border-color: var(--error-200); }
+  .badge--info    { background: var(--info-50);    color: var(--info-700);    border-color: var(--info-200); }
+
+  /* Modal component ===== */
+  .modal-stage {
+    position: relative;
+    min-height: 260px;
+    background: linear-gradient(180deg, var(--neutral-100), var(--neutral-200));
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    overflow: hidden;
+  }
+  .modal-backdrop {
+    position: absolute; inset: 0;
+    background: oklch(0.175 0.005 60 / 0.35);
+    backdrop-filter: blur(2px);
+  }
+  .modal {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    margin: var(--space-5) auto 0;
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+  .modal-head { padding: var(--space-5) var(--space-5) var(--space-3); }
+  .modal-head h4 { margin: 0 0 4px; font-size: 17px; font-weight: 600; }
+  .modal-head p  { margin: 0; font-size: 13px; color: var(--text-muted); }
+  .modal-body { padding: 0 var(--space-5) var(--space-4); font-size: 14px; color: var(--text-secondary); }
+  .modal-foot {
+    padding: var(--space-3) var(--space-5);
+    display: flex; gap: var(--space-2); justify-content: flex-end;
+    background: var(--bg-subtle);
+    border-top: 1px solid var(--border-default);
+  }
+
+  /* Principles callout */
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+  }
+  .principle {
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+  }
+  .principle .num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--primary-600);
+    letter-spacing: 0.08em;
+  }
+  .principle h4 { margin: 6px 0 8px; font-family: var(--font-serif); font-size: 20px; font-weight: 600; }
+  .principle p  { margin: 0; font-size: 13.5px; color: var(--text-secondary); line-height: 1.55; }
+
+  @media (max-width: 860px) {
+    .components-grid, .tokens-grid, .principles { grid-template-columns: 1fr; }
+    .scale { grid-template-columns: repeat(3, 1fr); }
+    header.masthead { flex-direction: column; align-items: flex-start; }
+    .masthead-meta { text-align: left; }
+    .type-display { font-size: 40px; }
+    .type-h1 { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <div class="brand">
+      <div class="brand-mark">V</div>
+      <div class="brand-meta">
+        <div class="name">Veritas Design System</div>
+        <div class="tag">B2B 法遵科技 · 嚴謹 / 可信 / 不冰冷</div>
+      </div>
+    </div>
+    <div class="masthead-meta">
+      <div>v0.1 · <code>design-system/index.html</code></div>
+      <div>oklch 色彩空間 · IBM Plex 字型</div>
+    </div>
+  </header>
+
+  <!-- Brand voice -->
+  <section class="group" id="brand">
+    <div class="group-header">
+      <span class="kicker">01 · Brand</span>
+      <div>
+        <h2>設計原則</h2>
+        <p>法遵工具的讀者通常在高壓情境下做高風險決策。系統必須沉穩到值得信任，又有溫度到不讓人孤立。</p>
+      </div>
+    </div>
+    <div class="principles">
+      <div class="principle">
+        <div class="num">PRINCIPLE 01</div>
+        <h4>嚴謹先於亮眼</h4>
+        <p>資訊密度、對齊與一致性優先於視覺噪音。裝飾只在強化可讀性時才加入。</p>
+      </div>
+      <div class="principle">
+        <div class="num">PRINCIPLE 02</div>
+        <h4>可信來自可追溯</h4>
+        <p>每個狀態、顏色、語意都有明確的 token 與意圖，便於審計與重現。</p>
+      </div>
+      <div class="principle">
+        <div class="num">PRINCIPLE 03</div>
+        <h4>溫度藏在細節</h4>
+        <p>以微暖灰與赭土色調軟化深藍；以襯線字型增加人文感而非冰冷演算法。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Colors -->
+  <section class="group" id="colors">
+    <div class="group-header">
+      <span class="kicker">02 · Colors</span>
+      <div>
+        <h2>色彩系統</h2>
+        <p>主色為偏暖深藍（Trust Ink），搭配赭土色（Ledger Clay）作為輔助，整體建構在 oklch 上以確保感知均勻的階段變化。</p>
+      </div>
+    </div>
+
+    <div class="scale-title"><h3>Primary — Trust Ink</h3><span class="desc">品牌主色 · CTA / 互動焦點</span></div>
+    <div class="scale" data-scale="primary"></div>
+
+    <div class="scale-title"><h3>Secondary — Ledger Clay</h3><span class="desc">輔助強調 · 數據標記 / 分類</span></div>
+    <div class="scale" data-scale="secondary"></div>
+
+    <div class="scale-title"><h3>Neutral — Warm Slate</h3><span class="desc">文字 / 邊框 / 表面</span></div>
+    <div class="scale" data-scale="neutral"></div>
+
+    <div class="scale-title"><h3>Semantic — Success</h3><span class="desc">完成 / 通過審核 / 正常</span></div>
+    <div class="scale" data-scale="success"></div>
+
+    <div class="scale-title"><h3>Semantic — Warning</h3><span class="desc">提醒 / 需要注意</span></div>
+    <div class="scale" data-scale="warning"></div>
+
+    <div class="scale-title"><h3>Semantic — Error</h3><span class="desc">違規 / 失敗 / 阻斷性問題</span></div>
+    <div class="scale" data-scale="error"></div>
+
+    <div class="scale-title"><h3>Semantic — Info</h3><span class="desc">中性通知 / 輔助說明</span></div>
+    <div class="scale" data-scale="info"></div>
+  </section>
+
+  <!-- Typography -->
+  <section class="group" id="typography">
+    <div class="group-header">
+      <span class="kicker">03 · Type</span>
+      <div>
+        <h2>字型系統</h2>
+        <p>Display 與 H1 使用 IBM Plex Serif 表達制度與人文感；其餘層級採 IBM Plex Sans 以維持資料密度；Code 用 Plex Mono 對齊法條編號與條款引用。</p>
+      </div>
+    </div>
+    <div class="type-specimen">
+      <div class="label">Display</div>
+      <div>
+        <div class="type-display specimen">合規，是能被驗證的承諾。</div>
+        <div class="meta">Serif · 56 / 1.1 · weight 600 · -0.02em</div>
+      </div>
+
+      <div class="label">Heading 1</div>
+      <div>
+        <div class="type-h1 specimen">年度風險評估已完成</div>
+        <div class="meta">Serif · 40 / 1.15 · weight 600</div>
+      </div>
+
+      <div class="label">Heading 2</div>
+      <div>
+        <div class="type-h2 specimen">第三方供應商審查清單</div>
+        <div class="meta">Sans · 28 / 1.25 · weight 600</div>
+      </div>
+
+      <div class="label">Heading 3</div>
+      <div>
+        <div class="type-h3 specimen">待簽核項目（12）</div>
+        <div class="meta">Sans · 20 / 1.3 · weight 600</div>
+      </div>
+
+      <div class="label">Body</div>
+      <div>
+        <div class="type-body specimen">當供應商的資料處理範圍改變時，系統會自動觸發重新評估。你可以在時間軸檢視所有變更紀錄，並於簽核前比對版本差異。</div>
+        <div class="meta">Sans · 16 / 1.6 · weight 400</div>
+      </div>
+
+      <div class="label">Caption</div>
+      <div>
+        <div class="type-caption specimen">最後更新於 2026-04-22 14:32 · 依 ISO 27001:2022 Annex A.5.19 規範</div>
+        <div class="meta">Sans · 13 / 1.5 · weight 400 · tracked +0.01em</div>
+      </div>
+
+      <div class="label">Code</div>
+      <div>
+        <div class="type-code specimen">Article 32(1)(b) — ensure the ongoing confidentiality, integrity, availability and resilience of processing systems</div>
+        <div class="meta">Mono · 14 / 1.55 · weight 400</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Spacing & Radius -->
+  <section class="group" id="tokens">
+    <div class="group-header">
+      <span class="kicker">04 · Spacing</span>
+      <div>
+        <h2>間距與圓角</h2>
+        <p>4px 為基礎網格，圓角維持克制（最大常用為 16px），避免過度柔化削弱制度感。</p>
+      </div>
+    </div>
+    <div class="tokens-grid">
+      <div class="token-card">
+        <h3>Spacing Scale</h3>
+        <div class="token-row"><span class="name">space-0</span><span class="value">0</span><div class="bar" style="width:0"></div></div>
+        <div class="token-row"><span class="name">space-1</span><span class="value">4px</span><div class="bar" style="width:4px"></div></div>
+        <div class="token-row"><span class="name">space-2</span><span class="value">8px</span><div class="bar" style="width:8px"></div></div>
+        <div class="token-row"><span class="name">space-3</span><span class="value">12px</span><div class="bar" style="width:12px"></div></div>
+        <div class="token-row"><span class="name">space-4</span><span class="value">16px</span><div class="bar" style="width:16px"></div></div>
+        <div class="token-row"><span class="name">space-5</span><span class="value">24px</span><div class="bar" style="width:24px"></div></div>
+        <div class="token-row"><span class="name">space-6</span><span class="value">32px</span><div class="bar" style="width:32px"></div></div>
+        <div class="token-row"><span class="name">space-7</span><span class="value">48px</span><div class="bar" style="width:48px"></div></div>
+        <div class="token-row"><span class="name">space-8</span><span class="value">64px</span><div class="bar" style="width:64px"></div></div>
+        <div class="token-row"><span class="name">space-9</span><span class="value">96px</span><div class="bar" style="width:96px"></div></div>
+      </div>
+      <div class="token-card">
+        <h3>Radius Scale</h3>
+        <div class="token-row"><span class="name">none</span><span class="value">0</span><div class="radius-demo" style="border-radius:0"></div></div>
+        <div class="token-row"><span class="name">sm</span><span class="value">2px</span><div class="radius-demo" style="border-radius:2px"></div></div>
+        <div class="token-row"><span class="name">md</span><span class="value">6px</span><div class="radius-demo" style="border-radius:6px"></div></div>
+        <div class="token-row"><span class="name">lg</span><span class="value">10px</span><div class="radius-demo" style="border-radius:10px"></div></div>
+        <div class="token-row"><span class="name">xl</span><span class="value">16px</span><div class="radius-demo" style="border-radius:16px"></div></div>
+        <div class="token-row"><span class="name">2xl</span><span class="value">24px</span><div class="radius-demo" style="border-radius:24px"></div></div>
+        <div class="token-row"><span class="name">full</span><span class="value">9999px</span><div class="radius-demo" style="border-radius:9999px"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Components -->
+  <section class="group" id="components">
+    <div class="group-header">
+      <span class="kicker">05 · Components</span>
+      <div>
+        <h2>基礎元件</h2>
+        <p>從 tokens 推導而來；所有互動狀態（hover / focus / disabled / error）皆內建，以降低下游實作的決策成本。</p>
+      </div>
+    </div>
+
+    <div class="components-grid">
+
+      <!-- Buttons -->
+      <div class="demo">
+        <div class="demo-head"><h3>Button</h3><span class="kind">4 variants</span></div>
+        <div class="demo-row">
+          <button class="btn btn--primary">送出審核</button>
+          <button class="btn btn--secondary">儲存草稿</button>
+          <button class="btn btn--ghost">取消</button>
+          <button class="btn btn--destructive">撤銷簽核</button>
+        </div>
+        <div class="demo-row">
+          <button class="btn btn--primary btn--sm">sm</button>
+          <button class="btn btn--primary">md</button>
+          <button class="btn btn--primary btn--lg">lg</button>
+          <button class="btn btn--primary" disabled>disabled</button>
+        </div>
+      </div>
+
+      <!-- Inputs -->
+      <div class="demo">
+        <div class="demo-head"><h3>Input</h3><span class="kind">default / focus / error</span></div>
+        <div class="field">
+          <label for="f1">供應商名稱</label>
+          <input id="f1" class="input" placeholder="例如：Acme Processing Ltd." />
+          <span class="hint">用於審查紀錄的唯一識別。</span>
+        </div>
+        <div style="height: 12px"></div>
+        <div class="field">
+          <label for="f2">DPA 版本號</label>
+          <input id="f2" class="input" value="v2.3 (2024-11)" data-state="error" />
+          <span class="error-text">此版本已於 2026-01 被取代，請上傳 v3.0。</span>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <div class="demo">
+        <div class="demo-head"><h3>Card</h3><span class="kind">header / body / footer</span></div>
+        <div class="card">
+          <div class="card-head">
+            <h4>GDPR Art. 32 對齊檢查</h4>
+            <span class="badge badge--success">已通過</span>
+          </div>
+          <div class="card-body">
+            14 項控制點全數涵蓋，最近一次由風險小組於 2026-04-18 覆核。下次預計覆核：2026-10-18。
+          </div>
+          <div class="card-foot">
+            <button class="btn btn--ghost btn--sm">檢視記錄</button>
+            <button class="btn btn--secondary btn--sm">匯出報告</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div class="demo">
+        <div class="demo-head"><h3>Badge</h3><span class="kind">5 semantic tones</span></div>
+        <div class="demo-row">
+          <span class="badge badge--neutral">草稿</span>
+          <span class="badge badge--info">審查中</span>
+          <span class="badge badge--success">已通過</span>
+          <span class="badge badge--warning">即將到期</span>
+          <span class="badge badge--error">違規</span>
+        </div>
+        <div class="demo-row" style="margin-top: var(--space-4)">
+          <span class="type-caption">badge 用於狀態標記；不適合承載行動——行動應使用 Button。</span>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div class="demo" style="grid-column: 1 / -1">
+        <div class="demo-head"><h3>Modal</h3><span class="kind">confirmation pattern</span></div>
+        <div class="modal-stage">
+          <div class="modal-backdrop"></div>
+          <div class="modal">
+            <div class="modal-head">
+              <h4>確認撤銷此次簽核？</h4>
+              <p>此操作會將工單退回至「待審查」狀態，並通知相關審查人。</p>
+            </div>
+            <div class="modal-body">
+              撤銷後，原審查意見仍會保留在歷史紀錄中，便於日後稽核追溯。
+            </div>
+            <div class="modal-foot">
+              <button class="btn btn--ghost btn--sm">保留簽核</button>
+              <button class="btn btn--destructive btn--sm">撤銷簽核</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer style="padding: var(--space-7) 0; color: var(--text-muted); font-size: 13px; text-align: center;">
+    Veritas Design System · prototype · 所有色票以 oklch 定義、可於 :root 調整一次即全站同步。
+  </footer>
+</div>
+
+<script>
+  // Render color scales from CSS variables so swatches stay synced with :root
+  const ROOT = getComputedStyle(document.documentElement);
+  document.querySelectorAll('.scale[data-scale]').forEach((el) => {
+    const name = el.dataset.scale;
+    const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+    // Remove 50 to fit into 9-column grid (per task spec "各含 9 階")
+    const nine = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+    el.innerHTML = nine.map((s) => {
+      const varName = `--${name}-${s}`;
+      const color = ROOT.getPropertyValue(varName).trim();
+      // Compute a readable foreground based on step depth
+      const light = s <= 400;
+      const fg = light ? 'oklch(0.22 0.02 60)' : 'oklch(0.98 0.003 60)';
+      return `
+        <div class="swatch" style="background:${color}; color:${fg};">
+          <span class="step">${name}-${s}</span>
+          <span class="hex">${color}</span>
+        </div>`;
+    }).join('');
+  });
+</script>
+</body>
+</html>

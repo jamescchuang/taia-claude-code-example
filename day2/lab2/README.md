@@ -1,10 +1,10 @@
-# Lab 2 - 召喚Claude Code更換頁面樣式
+# Lab 2：召喚Claude Code更換頁面樣式
 
 ## 操作步驟
 
 1. 開啟自己開發的應用程式，例如向量資料庫管理
 
-![原始畫面](image.png)
+![alt text](image-4.png)
 
 2. 使用 Claude Code 開啟專案
 
@@ -41,11 +41,9 @@
 - 提供查詢功能，回傳使用者指定的最接近資料數目
 - 這個範例程式使用 Python 開發，具備網頁功能及API服務
 
-### 系統需求：
+--- 
 
-- Docker：需先安裝並啟動 Docker Desktop
-
-### 原始專案完整提示詞
+## 原始專案完整提示詞
 
 專案：**向量資料庫的管理及測試**
 
@@ -57,10 +55,13 @@
 
 使用fastapi與tailwind建立網頁應用程式，將參數均設計為可讓使用者改變，並讓使用者在網頁上進行查詢
 
-我需要一個 requirements.txt（包含 pymilvus, langchain, langchain-community, sentence-transformers, openai）以及一個 docker-compose.yml 來運行本地端 Milvus Standalone
+我需要一個 requirements.txt（包含 pymilvus, langchain, langchain-community, sentence-transformers, openai）以及本地端 Milvus Lite
 
-完成後請幫我執行 docker-compose up -d
+援 .txt / .md / .pdf / .py / .json / .csv / .log 等檔案的索引
+
 ```
+
+![alt text](image-3.png)
 
 ---
 
