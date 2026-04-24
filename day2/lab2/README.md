@@ -1,14 +1,25 @@
-# Lab 2：召喚Claude Code更換頁面樣式
+# Day2, Lab 2：向量資料庫管理與測試
+
+> 安裝與啟動請見 [SETUP.md](SETUP.md)。快速指令：
+>
+> ```bash
+> uv venv --python 3.11 && uv pip install -r requirements.txt
+> uv run uvicorn app.main:app --reload
+> ```
+
+---
+
+## 召喚 Claude Code 更換頁面樣式
 
 ## 操作步驟
 
-1. 開啟自己開發的應用程式，例如向量資料庫管理
+### 1. 開啟自己開發的應用程式，例如向量資料庫管理
 
 ![alt text](image-4.png)
 
-2. 使用 Claude Code 開啟專案
+### 2. 使用 Claude Code 開啟專案
 
-3. 在Claude Code介面中，貼上欲更新的範例畫面 (或使用 `@圖檔檔名`)，並輸入提示詞
+### 3. 在Claude Code介面中，貼上欲更新的範例畫面 (或使用 `@圖檔檔名`)，並輸入提示詞
 
 ```prompt
 套用這張圖片中的畫面設計風格，更新專案的前端網頁
@@ -18,11 +29,11 @@
 
 ![alt text](ai_portal.png)
 
-4. 在 Claude Code 中執行，Claude Code 自動進行重新設計
+### 4. 在 Claude Code 中執行，Claude Code 自動進行重新設計
 
 ![alt text](image-1.png)
 
-5. 設計完成後，網頁將更新為新的設計
+### 5. 設計完成後，網頁將更新為新的設計
 
 ![alt text](image-2.png)
 
@@ -57,7 +68,7 @@
 
 我需要一個 requirements.txt（包含 pymilvus, langchain, langchain-community, sentence-transformers, openai）以及本地端 Milvus Lite
 
-援 .txt / .md / .pdf / .py / .json / .csv / .log 等檔案的索引
+支援 .txt / .md / .pdf / .py / .json / .csv / .log 等檔案的索引
 
 ```
 

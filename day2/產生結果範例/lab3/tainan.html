@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>台南市即時天氣</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #ff9a56 0%, #ffcd3c 50%, #56ccf2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #222;
+  }
+  .card {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+  }
+  h1 { font-size: 2rem; margin-bottom: 6px; color: #c2410c; }
+  .subtitle { color: #666; margin-bottom: 24px; font-size: 0.95rem; }
+  .icon { font-size: 5rem; margin: 10px 0; }
+  .temp { font-size: 4rem; font-weight: 700; color: #1f2937; }
+  .desc { font-size: 1.2rem; color: #374151; margin: 8px 0 24px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .item {
+    background: #fff7ed;
+    border-radius: 12px;
+    padding: 14px;
+    border: 1px solid #fed7aa;
+  }
+  .item .label { font-size: 0.85rem; color: #9a3412; margin-bottom: 4px; }
+  .item .value { font-size: 1.1rem; font-weight: 600; color: #1f2937; }
+  .time { margin-top: 20px; font-size: 0.85rem; color: #6b7280; }
+  .error { color: #b91c1c; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>台南市</h1>
+    <div class="subtitle">Tainan City · 即時天氣</div>
+    <div id="content">載入中…</div>
+  </div>
+
+<script>
+const LAT = 22.9908, LON = 120.2133;
+const URL = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation&timezone=Asia%2FTaipei`;
+
+const WMO = {
+  0: ["晴朗", "☀️"], 1: ["大致晴朗", "🌤️"], 2: ["局部多雲", "⛅"], 3: ["陰天", "☁️"],
+  45: ["有霧", "🌫️"], 48: ["凍霧", "🌫️"],
+  51: ["小毛雨", "🌦️"], 53: ["毛毛雨", "🌦️"], 55: ["大毛雨", "🌦️"],
+  61: ["小雨", "🌧️"], 63: ["中雨", "🌧️"], 65: ["大雨", "🌧️"],
+  71: ["小雪", "🌨️"], 73: ["中雪", "🌨️"], 75: ["大雪", "❄️"],
+  80: ["陣雨", "🌦️"], 81: ["強陣雨", "🌧️"], 82: ["劇烈陣雨", "⛈️"],
+  95: ["雷雨", "⛈️"], 96: ["雷雨夾冰雹", "⛈️"], 99: ["強雷雨夾冰雹", "⛈️"]
+};
+
+async function load() {
+  const el = document.getElementById('content');
+  try {
+    const res = await fetch(URL);
+    if (!res.ok) throw new Error(res.statusText);
+    const data = await res.json();
+    const c = data.current;
+    const [desc, icon] = WMO[c.weather_code] || ["未知", "❓"];
+    el.innerHTML = `
+      <div class="icon">${icon}</div>
+      <div class="temp">${c.temperature_2m.toFixed(1)}°C</div>
+      <div class="desc">${desc}</div>
+      <div class="grid">
+        <div class="item"><div class="label">體感溫度</div><div class="value">${c.apparent_temperature.toFixed(1)}°C</div></div>
+        <div class="item"><div class="label">相對濕度</div><div class="value">${c.relative_humidity_2m}%</div></div>
+        <div class="item"><div class="label">風速</div><div class="value">${c.wind_speed_10m} km/h</div></div>
+        <div class="item"><div class="label">降水量</div><div class="value">${c.precipitation} mm</div></div>
+      </div>
+      <div class="time">更新時間：${c.time.replace('T', ' ')}</div>
+    `;
+  } catch (e) {
+    el.innerHTML = `<p class="error">無法取得天氣資料：${e.message}</p>`;
+  }
+}
+load();
+</script>
+</body>
+</html>

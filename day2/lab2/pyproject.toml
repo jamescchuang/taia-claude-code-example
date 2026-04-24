@@ -1,12 +1,13 @@
 [project]
 name = "vector-db-lab"
 version = "0.1.0"
-description = "Vector DB management & testing app (FastAPI + Tailwind + Milvus Lite)"
+description = "Vector database management and testing web app (FastAPI + Milvus Lite)"
+readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "pymilvus>=2.4.0",
-    "milvus-lite>=2.4.0",
-    "setuptools>=70.0.0,<81",
+    "pymilvus[milvus_lite]>=2.4.0",
+    "milvus-lite>=2.4.10",
+    "setuptools<81",
     "langchain>=0.3.0",
     "langchain-community>=0.3.0",
     "sentence-transformers>=3.0.0",
@@ -15,8 +16,7 @@ dependencies = [
     "uvicorn[standard]>=0.30.0",
     "jinja2>=3.1.0",
     "python-multipart>=0.0.9",
-    "pydantic>=2.8.0",
-    "pypdf>=5.0.0",
+    "pypdf>=4.2.0",
 ]
 
 [tool.uv]

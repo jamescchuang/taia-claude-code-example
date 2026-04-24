@@ -1,0 +1,6 @@
+perform security code review with codeguard guidelines in instructions folder. create new report markdown file.
+
+analyze guideline md files and create a new file with summary of the guidelines.
+將內容翻譯為繁體中文，並保留英文原文以進行對照
+
+根據security_code_review_report.md報告的5項結果，修正並更新flaw_sql.py程式碼

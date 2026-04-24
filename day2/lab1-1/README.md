@@ -8,9 +8,21 @@ Claude Design 網址：[https://claude.ai/design](https://claude.ai/design)
 
 ## 網傳外流的 Claude Design 系統提示詞
 
+### 什麼是系統提示詞
 
+系統提示詞（System Prompt）是給 AI 模型的背景指示，用來定義 AI 應如何行為、思考和回應。它是在實際對話開始之前就被設定的「規則集」或「角色定義」。
+
+1. 定義 AI 的角色和身份
+2. 設定行為準則
+3. 提供上下文和範圍
+
+### 這份系統提示詞包含的重點
 
 > 是給 AI 設計代理人（Design Agent）使用的系統指示（System Prompt）。它把 AI 的角色定位為「一位以 HTML 為工具、與使用者（管理者）協作的資深設計師」，並規範了從「理解需求 → 蒐集設計素材 → 產出 HTML 設計稿 → 驗證交付」的完整工作流程與細節要求。
+
+### 完整的系統提示詞
+
+[](design_guidelines.md)
 
 ## 試試看：用 Claude Code 生成設計稿
 

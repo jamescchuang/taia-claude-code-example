@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "reddit": {
+      "command": "uv",
+      "args": ["--directory", "reddit-mcp", "run", "reddit-mcp"]
+    }
+  }
+}

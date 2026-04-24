@@ -1,32 +1,28 @@
-# Vector DB Lab — Setup
+# 安裝與啟動
 
-## 環境需求
-- Python 3.10+
-- [uv](https://github.com/astral-sh/uv)
-
-## 安裝
+## 1. 建立虛擬環境並安裝套件（使用 uv）
 
 ```bash
-cd day2/lab2
-uv venv
-source .venv/bin/activate
+uv venv --python 3.11
 uv pip install -r requirements.txt
 ```
 
-## 啟動
+## 2. 啟動 FastAPI 服務
 
 ```bash
-uv run uvicorn app.main:app --reload
+uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-開啟 http://127.0.0.1:8000
+開啟瀏覽器 http://localhost:8000 即可使用。
 
-## 功能
+## 3. 使用流程
 
-- **索引資料夾**：指定本機資料夾，讀取 `.txt/.md/.py/...` 檔案並存入 Milvus Lite。
-- **查詢**：可在網頁上調整 collection、embedding 模型、top_k。
-- **Collections**：列出與刪除現有 collection。
+1. 在「參數設定」調整 DB 路徑、Collection、Embedding Model、Chunk Size / Overlap，按「儲存參數」。
+2. 在「索引資料夾」輸入資料夾路徑（預設 `./data/docs`），按「開始索引」。
+3. 在「查詢」輸入查詢字串與 `top_k`，查看最相近的段落。
 
-所有參數（資料夾、collection、embedding 模型、chunk size/overlap、top_k）都可以從網頁調整。
+## 支援的檔案副檔名
+`.txt` `.md` `.pdf` `.py` `.json` `.csv` `.log`
 
-Milvus Lite 檔案位於 `data/milvus_lite.db`。
+## 資料位置
+Milvus Lite 資料庫檔案預設寫入 `./milvus_data/vector.db`（已加入 `.gitignore`）。
