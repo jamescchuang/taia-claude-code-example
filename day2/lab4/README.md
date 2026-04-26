@@ -23,6 +23,26 @@
 
 完成本 Lab 後，學員將掌握 Sub Agents、Skill、Hooks 與 CLAUDE.md 之間的協作方式，能規劃並落地多代理人工作流。
 
+## 流程圖
+
+```mermaid
+flowchart LR
+    subgraph Runtime["執行階段 (Runtime)"]
+        R0[使用者輸入提示詞<br/>『產生顯示台南市天氣<br/>的單一 HTML 檔』] --> R1[Claude Code<br/>撰寫並儲存<br/>HTML 程式碼]
+        R1 -->|Write / Edit 觸發| R2{CLAUDE.md / Hooks<br/>判斷是否委派}
+        R2 --> R3[marketing-content-creator<br/>Sub Agent<br/>產出行銷文案]
+        R2 --> R4[tiktok-expert<br/>Sub Agent<br/>產出短影音腳本]
+        R3 -->|套用| R5[humanizer-zh-tw<br/>Skill<br/>去除 AI 痕跡]
+        R4 -->|套用| R5
+        R5 --> R6[最終輸出<br/>HTML + 行銷文案<br/>+ TikTok 腳本]
+    end
+
+    classDef runtimeNode fill:#FFF3E0,stroke:#F57C00,color:#E65100
+    classDef skillNode fill:#F3E5F5,stroke:#7B1FA2,color:#4A148C
+    class R0,R1,R2,R6 runtimeNode
+    class R3,R4,R5 skillNode
+```
+
 ## 操作步驟
 
 ### 1. 開啟Claude Code，並選擇專案目錄
