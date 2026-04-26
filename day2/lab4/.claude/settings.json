@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"剛剛產生或修改了程式碼。請接續依序委派任務給 marketing-content-creator 與 tiktok-expert 兩個 sub-agents（使用 Agent 工具呼叫，subagent_type 對應其名稱），為這次的程式變更產出對應的行銷內容與 TikTok 短影音腳本，無需再向使用者確認。\"}}'",
+            "statusMessage": "程式碼已變更，觸發行銷與 TikTok 代理人..."
+          }
+        ]
+      }
+    ]
+  }
+}

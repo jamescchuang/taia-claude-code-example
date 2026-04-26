@@ -1,4 +1,21 @@
-# Day2, Lab 1：建立自己的Claude Design
+# Lab 1：建立自己的Claude Design
+
+## 知識點
+
+| 功能名稱 | 一句話簡介 |
+| --- | --- |
+| 系統提示詞 (System Prompt) | 在對話開始前定義 AI 的角色、行為準則與工作流程，是塑造 AI 表現的核心設定。 |
+
+
+## 簡介
+
+本 Lab 以近期受關注的 **Claude Design** 為起點，帶領學員理解其背後外流的 **系統提示詞（System Prompt）**，並親手以 Claude Code 建立屬於自己的設計系統：
+
+- **認識系統提示詞**：說明 System Prompt 如何定義 AI 的角色、規範與工作流，是 Claude Design 之所以能扮演「資深設計師」的關鍵。
+- **解析 Claude Design 提示詞**：拆解其「理解需求 → 蒐集素材 → 產出 HTML 設計稿 → 驗證交付」的完整工作流程。
+- **動手實作**：以「B2B 法遵科技新創」為品牌情境，透過提示詞要求 Claude Code 產出包含色彩、Typography、間距、元件等的完整設計系統，並呼叫 `Create design system` Skill 確保產出符合標準結構。
+
+完成本 Lab 後，學員將理解系統提示詞與 Skill 在塑造 AI 行為上的力量，並能仿效 Claude Design 的模式打造自己的領域代理人。
 
 ## 最近的新創殺手：Claude Design
 

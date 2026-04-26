@@ -1,78 +1,62 @@
-# Day2, Lab 2：向量資料庫管理與測試
+# Lab 2: 讀取 Excel 檔並建立網頁儀表板
 
-> 安裝與啟動請見 [SETUP.md](SETUP.md)。快速指令：
->
-> ```bash
-> uv venv --python 3.11 && uv pip install -r requirements.txt
-> uv run uvicorn app.main:app --reload
-> ```
+## 知識點
 
----
+| 功能名稱 | 一句話簡介 |
+| --- | --- |
+| 檔案讀取與理解 | Claude Code 直接讀取專案中的 Excel、Markdown 等檔案內容，作為任務上下文。 |
+| 自動規劃與執行 | 接收提示後自動拆解步驟、安裝必要工具與套件，再依規劃逐步完成任務。 |
+| 多檔案上下文整合 | 同時參照資料檔（Excel）與設計規範（design_guidelines.md），讓產出貼近預期。 |
+| 自然語言驅動程式碼生成 | 以提示詞描述風格、色系、響應式需求，由 Claude 直接產生可執行的 HTML/Python 程式碼。 |
+| 文件自動產出 | 依照資料內容自動撰寫 `userguide.md` 等說明文件，提升交付完整度。 |
 
-## 召喚 Claude Code 更換頁面樣式
+## 簡介
+
+本 Lab 示範如何運用 Claude Code 的「**讀檔 + 規劃 + 程式碼生成**」能力，將一份 Excel 財務資料快速轉換為可在本地端運行的視覺化網頁儀表板：
+
+- **資料理解**：讓 Claude Code 讀取 `Financial_Model.xlsx`，自動產生 `userguide.md` 說明文件。
+- **設計參考**：以 `design_guidelines.md` 作為設計規範，並指定金融科技風格與紅色系色系。
+- **儀表板生成**：透過提示詞要求 Claude 產出單一 HTML 儀表板，支援不同裝置解析度，且不需連網即可在本地端運行。
+- **工具管理**：在過程中需要 Python 環境時，由 Claude 自動以 `uv` 進行套件與虛擬環境管理。
+
+完成本 Lab 後，學員將理解如何透過清楚的提示詞與多檔案上下文，讓 Claude Code 端到端完成「資料 → 文件 → 視覺化網頁」的工作流。
 
 ## 操作步驟
 
-### 1. 開啟自己開發的應用程式，例如向量資料庫管理
+1. 開啟 Claude Code，並選擇專案目錄；本範例中會用到以下兩個檔案
 
-![alt text](image-4.png)
-
-### 2. 使用 Claude Code 開啟專案
-
-### 3. 在Claude Code介面中，貼上欲更新的範例畫面 (或使用 `@圖檔檔名`)，並輸入提示詞
-
-```prompt
-套用這張圖片中的畫面設計風格，更新專案的前端網頁
+```
+Financial_Model.xlsx
+design_guidelines.md
 ```
 
-例如，要套用的樣示圖片如下：
+2. 讓Claude Code讀取並產生檔案的摘要說明。輸入提示詞
 
-![alt text](ai_portal.png)
+```
+產生 userguide.md 文件，說明 Excel 檔的內容與資訊
 
-### 4. 在 Claude Code 中執行，Claude Code 自動進行重新設計
+若需要使用Python，使用uv來進行管理
+```
+
+3. Claude Code會進行理解、規劃步驟、安裝必要的工具及套件，最後產生網頁程式碼
+
+```
+分析Excel檔並建立本地端單一HTML儀表板來呈現視覺化資料，設計規範參考 design_guidelines.md 檔案，風格設計為金融科技領域，色系採用紅色系
+
+若需要使用Python，使用uv來進行管理
+
+網頁須支援不同裝置及顯示解析度，確保網頁內容可完整顯示不須左右捲動
+
+須可以在本地端運行不需要連網
+```
+
+4. 網頁儀表板產生後，開啟即可瀏覽
+
+![alt text](image.png)
+
+提示詞中不同的指示，可產生不同風格的顯示
 
 ![alt text](image-1.png)
-
-### 5. 設計完成後，網頁將更新為新的設計
-
-![alt text](image-2.png)
-
----
-
-## 參考資料
-
-### 範例畫面功能說明
-
-示範一個使用向量資料庫的管理及測試頁面，包含下列特點：
-
-- 使用 Ollama 來運行地端開源的 Embedding Model
-- 使用者可自行管理及變更 Embedding Model
-- 使用地端向量資料庫來儲存向量後的資料
-- 提供使用者索引資料夾中的檔案，儲存到向量資料庫
-- 提供查詢功能，回傳使用者指定的最接近資料數目
-- 這個範例程式使用 Python 開發，具備網頁功能及API服務
-
---- 
-
-## 原始專案完整提示詞
-
-專案：**向量資料庫的管理及測試**
-
-提示詞：
-```
-請幫我初始化這個專案
-
-使用uv來管理python及venv
-
-使用fastapi與tailwind建立網頁應用程式，將參數均設計為可讓使用者改變，並讓使用者在網頁上進行查詢
-
-我需要一個 requirements.txt（包含 pymilvus, langchain, langchain-community, sentence-transformers, openai）以及本地端 Milvus Lite
-
-支援 .txt / .md / .pdf / .py / .json / .csv / .log 等檔案的索引
-
-```
-
-![alt text](image-3.png)
 
 ---
 

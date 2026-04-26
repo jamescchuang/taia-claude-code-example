@@ -1,70 +1,67 @@
-# Lab 3 "Sub Agents"：一人公司、多個 AI 代理人幫你完成任務
-
-## 知識點
-
-- Sub Agents
-- Skill
-- CLAUDE.md
+# Day2, Lab 2：召喚Claude Code更換頁面樣式
 
 ## 操作步驟
 
-### 1. 開啟Claude Code，並選擇專案目錄
+1. 開啟自己開發的應用程式，例如向量資料庫管理
 
-### 2. 讓Claude Code建立子代理人 (Sub Agent)
+![alt text](image-4.png)
 
-![alt text](image.png)
+2. 使用 Claude Code 開啟專案
 
-### 3. 採用現成的代理人
+3. 在Claude Code介面中，貼上欲更新的範例畫面 (或使用 `@圖檔檔名`)，並輸入提示詞
 
-- 下載 [https://github.com/msitarzewski/agency-agents/blob/main/marketing/marketing-content-creator.md](https://github.com/msitarzewski/agency-agents/blob/main/marketing/marketing-content-creator.md)
-
-- 儲存到專案目錄下 `.claude/agents/<agent名稱>`
-
-### 4. 採用 Humanizer 繁體中文版，讓文案內容"有人味"
-
-- 下載 [https://github.com/kevintsai1202/Humanizer-zh-TW/blob/main/SKILL.md](https://github.com/kevintsai1202/Humanizer-zh-TW/blob/main/SKILL.md)
-
-- 儲存到專案目錄下 `.claude/skills/<humanizer-zh-tw>`
-
-### 5. 修改 CLAUDE.md，確保子代理人被正確驅動
-
-- 開啟並編輯 CLAUDE.md 檔案
-
-- 將下列內容複製貼上到檔案的最後
-
-```
-當程式已完成，檢查是否有接續執行的 sub agent
+```prompt
+套用這張圖片中的畫面設計風格，更新專案的前端網頁
 ```
 
-### 6. 修改 Sub Agent 檔案，加入 Humanizer 的指示
+例如，要套用的樣示圖片如下：
 
-```
-## Humanizer
+![alt text](ai_portal.png)
 
-run humanizer-zh-tw skill on content created by this agent before saving it to file to remove AI-generated text patterns and make it sound more natural and human-written.
-```
-
-### 8. 重新啟動 Claude Code
-
-### 9. 輸入並執行下列提示詞
-
-```
-產生顯示台南市天氣的單一HTML檔案程式碼
-```
-
-### 10. 範例輸出
+4. 在 Claude Code 中執行，Claude Code 自動進行重新設計
 
 ![alt text](image-1.png)
+
+5. 設計完成後，網頁將更新為新的設計
+
+![alt text](image-2.png)
 
 ---
 
 ## 參考資料
 
-- Humanizer-zh-TW: AI 寫作人性化工具（繁體中文版）: [https://github.com/kevintsai1202/Humanizer-zh-TW](https://github.com/kevintsai1202/Humanizer-zh-TW)
+### 範例畫面功能說明
 
-- The Agency: AI Specialists Ready to Transform Your Workflow: [https://github.com/msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents)
+示範一個使用向量資料庫的管理及測試頁面，包含下列特點：
 
-- GitHub 爆紅：144個AI員工職位 (12個部門) 開源免費用，各有性格、工作流與 KPI: [https://www.blocktempo.com/agency-agents-github-84k-stars-144-ai-employee-personas-open-source/](https://www.blocktempo.com/agency-agents-github-84k-stars-144-ai-employee-personas-open-source/)
+- 使用 Ollama 來運行地端開源的 Embedding Model
+- 使用者可自行管理及變更 Embedding Model
+- 使用地端向量資料庫來儲存向量後的資料
+- 提供使用者索引資料夾中的檔案，儲存到向量資料庫
+- 提供查詢功能，回傳使用者指定的最接近資料數目
+- 這個範例程式使用 Python 開發，具備網頁功能及API服務
+
+--- 
+
+## 原始專案完整提示詞
+
+專案：**向量資料庫的管理及測試**
+
+提示詞：
+```
+請幫我初始化這個專案
+
+使用uv來管理python及venv
+
+使用fastapi與tailwind建立網頁應用程式，將參數均設計為可讓使用者改變，並讓使用者在網頁上進行查詢
+
+我需要一個 requirements.txt（包含 pymilvus, langchain, langchain-community, sentence-transformers, openai）以及本地端 Milvus Lite
+
+援 .txt / .md / .pdf / .py / .json / .csv / .log 等檔案的索引
+
+```
+
+![alt text](image-3.png)
 
 ---
 

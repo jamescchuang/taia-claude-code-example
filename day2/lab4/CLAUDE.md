@@ -32,3 +32,4 @@ This memory is project-scoped and versioned with the repo, so it's shared with t
 1. Create `.claude/agents/<name>.md` with frontmatter + system prompt.
 2. If the agent should have persistent memory, add `memory: project` and create `.claude/agent-memory/<name>/` (Claude will write into it on first save).
 3. Write the `description` from the parent's perspective — it's what Claude reads to decide whether to delegate.
+
