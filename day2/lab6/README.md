@@ -9,6 +9,12 @@
 | Skill | 將一段對話工作流打包成可重複觸發的專案層級技能，支援自然語言或斜線指令呼叫。 |
 
 
+## MCP: 大模型界Agent的統一接口(通訊埠)
+
+![alt text](image-10.png)
+
+圖片來源：[https://modelcontextprotocol.info/zh-tw/blog/understanding-mcp-protocol/](https://modelcontextprotocol.info/zh-tw/blog/understanding-mcp-protocol/)
+
 ## 簡介
 
 本 Lab 介紹 **MCP (Model Context Protocol)** 的應用與開發，透過兩個實作 Part 帶領學員體驗 MCP 的能力：
