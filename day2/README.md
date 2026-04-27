@@ -17,3 +17,11 @@ Day 2 以 **Claude Code 進階應用** 為主軸，透過 7 個循序漸進的 L
 | [Lab 5](lab5/README.md) | Rules：在 Claude Code 執行程式碼安全檢查 | 導入 Project CodeGuard 的 Skill 與 Rules，對程式碼進行安全掃描並產出報告。 |
 | [Lab 6](lab6/README.md) | MCP：使用與開發自己的 MCP Server | 從 Claude for Chrome 體驗 MCP，到開發 Reddit MCP Server 並包裝成 Skill。 |
 | [Lab 7](lab7/README.md) | 建構自己的知識系統 | 依 Karpathy 的 LLM Wiki 模式，以 CLAUDE.md 為 schema 打造可持續累積的個人知識庫。 |
+
+---
+
+## Claude Code愛好者共享群組 (Telegram)
+
+加入連結：[https://t.me/+CwrGIonlhqc4N2Vl](https://t.me/+CwrGIonlhqc4N2Vl)
+
+![alt text](FC251734-6BCF-4EDC-95E1-D2790B07F74D_4_5005_c.jpeg)
