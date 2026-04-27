@@ -1,0 +1,201 @@
+{
+  "main": {
+    "id": "3462205012084679",
+    "type": "split",
+    "children": [
+      {
+        "id": "e68b10192c14afad",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ddcf0f1f8039900f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "sources/context_engineering.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "context_engineering"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "21704fb6b373c299",
+    "type": "split",
+    "children": [
+      {
+        "id": "8354274e6451e7b8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3e8d85bc99437031",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "檔案瀏覽器"
+            }
+          },
+          {
+            "id": "12467ce990163b28",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜尋"
+            }
+          },
+          {
+            "id": "dee528107fc8b977",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "書籤"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "df0c86480cd138ce",
+    "type": "split",
+    "children": [
+      {
+        "id": "5f28c8b45cb3e314",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "52fbafa27e2c42df",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "sources/context_engineering.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "context_engineering 的反向連結"
+            }
+          },
+          {
+            "id": "de86f5e97feceabc",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "sources/llm_principles.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "llm_principles 的對外連結"
+            }
+          },
+          {
+            "id": "2cab37eccd37e80a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "標籤"
+            }
+          },
+          {
+            "id": "fb83735703107fda",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "所有屬性"
+            }
+          },
+          {
+            "id": "a0e3395a1328cea8",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "sources/llm_principles.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "llm_principles 的大綱"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:開啟快速切換": false,
+      "graph:查看關聯圖": false,
+      "canvas:建立新畫布": false,
+      "daily-notes:開啟今天的每日筆記": false,
+      "templates:插入模板": false,
+      "command-palette:開啟命令面板": false,
+      "bases:建立新的 base": false
+    }
+  },
+  "active": "ddcf0f1f8039900f",
+  "lastOpenFiles": [
+    "concepts/context_engineering.md",
+    "index.md",
+    "未命名.base",
+    "concepts/rag.md",
+    "concepts/ai_agent.md",
+    "sources/llm_principles.md",
+    "concepts/multi_agent.md",
+    "concepts/token_and_autoregressive.md",
+    "sources/llm_internals.md",
+    "concepts/reasoning.md",
+    "entities/hung_yi_lee.md",
+    "concepts/memory.md"
+  ]
+}
