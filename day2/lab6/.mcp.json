@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "reddit": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/yellowcc/source/taia-claude-code-example/day2/lab6/reddit-mcp",
+        "run",
+        "reddit-mcp"
+      ]
+    }
+  }
+}

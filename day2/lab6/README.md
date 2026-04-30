@@ -40,8 +40,6 @@
 
 #### Claude Code CLI
 
-![alt text](image-1.png)
-
 ![alt text](image-2.png)
 
 ## 使用 Claude for Chrome (MCP)

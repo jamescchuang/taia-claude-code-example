@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>台南市即時天氣</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #333;
+  }
+  .card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  h1 { font-size: 28px; margin-bottom: 8px; color: #d35400; }
+  .subtitle { color: #888; font-size: 14px; margin-bottom: 24px; }
+  .icon { font-size: 80px; margin: 16px 0; }
+  .temp { font-size: 64px; font-weight: 300; color: #e67e22; }
+  .desc { font-size: 18px; margin: 8px 0 24px; color: #555; }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .stat {
+    background: #fff7ed;
+    padding: 16px;
+    border-radius: 12px;
+  }
+  .stat-label { font-size: 12px; color: #999; }
+  .stat-value { font-size: 20px; font-weight: 600; color: #e67e22; margin-top: 4px; }
+  .updated { margin-top: 24px; font-size: 12px; color: #aaa; }
+  .error { color: #c0392b; padding: 20px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>台南市</h1>
+    <div class="subtitle">Tainan City · 即時天氣</div>
+    <div id="content">
+      <div class="icon">⏳</div>
+      <div class="desc">載入中…</div>
+    </div>
+  </div>
+
+<script>
+const WEATHER_CODES = {
+  0:  { icon: "☀️", desc: "晴朗" },
+  1:  { icon: "🌤️", desc: "大致晴朗" },
+  2:  { icon: "⛅", desc: "局部多雲" },
+  3:  { icon: "☁️", desc: "陰天" },
+  45: { icon: "🌫️", desc: "起霧" },
+  48: { icon: "🌫️", desc: "凍霧" },
+  51: { icon: "🌦️", desc: "毛毛雨" },
+  53: { icon: "🌦️", desc: "毛毛雨" },
+  55: { icon: "🌦️", desc: "強毛毛雨" },
+  61: { icon: "🌧️", desc: "小雨" },
+  63: { icon: "🌧️", desc: "中雨" },
+  65: { icon: "🌧️", desc: "大雨" },
+  71: { icon: "🌨️", desc: "小雪" },
+  73: { icon: "🌨️", desc: "中雪" },
+  75: { icon: "❄️", desc: "大雪" },
+  80: { icon: "🌧️", desc: "陣雨" },
+  81: { icon: "🌧️", desc: "強陣雨" },
+  82: { icon: "⛈️", desc: "暴雨" },
+  95: { icon: "⛈️", desc: "雷雨" },
+  96: { icon: "⛈️", desc: "雷雨夾冰雹" },
+  99: { icon: "⛈️", desc: "強雷雨夾冰雹" },
+};
+
+async function loadWeather() {
+  const url = "https://api.open-meteo.com/v1/forecast?latitude=22.9999&longitude=120.2270&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=Asia%2FTaipei";
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("API 回應失敗");
+    const data = await res.json();
+    const c = data.current;
+    const w = WEATHER_CODES[c.weather_code] || { icon: "❓", desc: "未知" };
+    document.getElementById("content").innerHTML = `
+      <div class="icon">${w.icon}</div>
+      <div class="temp">${Math.round(c.temperature_2m)}°C</div>
+      <div class="desc">${w.desc}</div>
+      <div class="grid">
+        <div class="stat">
+          <div class="stat-label">體感溫度</div>
+          <div class="stat-value">${Math.round(c.apparent_temperature)}°C</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">相對濕度</div>
+          <div class="stat-value">${c.relative_humidity_2m}%</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">風速</div>
+          <div class="stat-value">${c.wind_speed_10m} km/h</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">座標</div>
+          <div class="stat-value" style="font-size:14px">22.99°N 120.23°E</div>
+        </div>
+      </div>
+      <div class="updated">更新時間：${new Date(c.time).toLocaleString("zh-TW")}</div>
+    `;
+  } catch (e) {
+    document.getElementById("content").innerHTML =
+      `<div class="error">⚠️ 無法取得天氣資料：${e.message}</div>`;
+  }
+}
+
+loadWeather();
+</script>
+</body>
+</html>

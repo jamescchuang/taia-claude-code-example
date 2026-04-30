@@ -3,94 +3,227 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vector DB Lab</title>
+  <title>VectorOne · 向量資料庫管理</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --sidebar-bg: #2b2f3a;
+      --sidebar-hover: #363b47;
+      --sidebar-active: #1f232c;
+      --brand: #f6b53d;
+      --brand-soft: #fff4d6;
+      --accent: #2563eb;
+    }
+    body { font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif; }
+    .sidebar { background: var(--sidebar-bg); }
+    .sidebar a { color: #d6d8de; }
+    .sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+    .sidebar a.active { background: var(--sidebar-active); color: #fff; border-left: 3px solid var(--brand); }
+    .brand-dot { background: var(--brand); }
+    .field-label::before { content: "* "; color: #ef4444; }
+    .field-label.optional::before { content: ""; }
+    .pill { border-radius: 9999px; }
+    .floating-chat {
+      position: fixed; right: 24px; bottom: 24px;
+      width: 52px; height: 52px; border-radius: 9999px;
+      background: #14b8a6; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 10px 25px -5px rgba(20,184,166,.5);
+      cursor: pointer;
+    }
+    .model-option { border-bottom: 1px solid #f1f5f9; }
+    .model-option:last-child { border-bottom: 0; }
+    .model-option:hover { background: #fffbeb; }
+    .model-option.selected .name { color: #f59e0b; font-weight: 600; }
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen">
-  <div class="max-w-6xl mx-auto p-6 space-y-6">
-    <header class="flex items-center justify-between">
-      <div>
-        <h1 class="text-2xl font-bold">向量資料庫管理與測試</h1>
-        <p class="text-sm text-slate-500">FastAPI + Milvus Lite + Sentence-Transformers</p>
-      </div>
-      <div id="stats" class="text-sm text-slate-600 bg-white border border-slate-200 rounded-lg px-3 py-2">
-        載入中…
-      </div>
-    </header>
+<body class="bg-slate-100 text-slate-800 min-h-screen">
 
-    <section class="grid md:grid-cols-2 gap-6">
-      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
-        <h2 class="text-lg font-semibold">參數設定</h2>
-        <form id="configForm" class="space-y-3">
-          <label class="block">
-            <span class="text-sm text-slate-600">DB 檔案路徑</span>
-            <input name="db_path" value="{{ config.db_path }}" class="mt-1 w-full border rounded-lg p-2 text-sm" />
-          </label>
-          <label class="block">
-            <span class="text-sm text-slate-600">Collection 名稱</span>
-            <input name="collection" value="{{ config.collection }}" class="mt-1 w-full border rounded-lg p-2 text-sm" />
-          </label>
-          <label class="block">
-            <span class="text-sm text-slate-600">Embedding Model</span>
-            <input name="embedding_model" value="{{ config.embedding_model }}" class="mt-1 w-full border rounded-lg p-2 text-sm" />
-          </label>
-          <div class="grid grid-cols-2 gap-3">
-            <label class="block">
-              <span class="text-sm text-slate-600">Chunk Size</span>
-              <input type="number" min="50" name="chunk_size" value="{{ config.chunk_size }}" class="mt-1 w-full border rounded-lg p-2 text-sm" />
-            </label>
-            <label class="block">
-              <span class="text-sm text-slate-600">Chunk Overlap</span>
-              <input type="number" min="0" name="chunk_overlap" value="{{ config.chunk_overlap }}" class="mt-1 w-full border rounded-lg p-2 text-sm" />
-            </label>
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="sidebar w-56 flex flex-col text-sm">
+      <div class="px-4 py-4 flex items-center gap-2 border-b border-black/20">
+        <div class="brand-dot w-7 h-7 rounded-md flex items-center justify-center text-slate-900 font-bold">V</div>
+        <span class="text-white font-semibold tracking-wide">VectorOne AI</span>
+      </div>
+      <nav class="flex-1 py-3 space-y-1">
+        <a href="#" class="flex items-center gap-3 px-4 py-2"><span>📊</span>統計數據</a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2"><span>📚</span>知識庫管理</a>
+        <a href="#" class="active flex items-center gap-3 px-4 py-2"><span>🗂️</span>向量資料庫</a>
+        <div class="pl-10 space-y-1">
+          <a href="#" class="block py-1.5">· 參數設定</a>
+          <a href="#" class="block py-1.5">· 索引管理</a>
+          <a href="#" class="block py-1.5">· 查詢測試</a>
+        </div>
+        <a href="#" class="flex items-center gap-3 px-4 py-2"><span>🔌</span>插件管理</a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2"><span>🏢</span>企業管理</a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2"><span>⚙️</span>系統</a>
+      </nav>
+      <div class="px-4 py-3 text-xs text-slate-500 border-t border-black/20">v20260428.1</div>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex-1 flex flex-col">
+      <!-- Topbar -->
+      <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-2 text-sm text-slate-600">
+          <button class="p-1 rounded hover:bg-slate-100">⬅</button>
+          <span>向量資料庫</span>
+          <span class="text-slate-300">/</span>
+          <span class="text-slate-800 font-medium">機器人詳細資訊</span>
+        </div>
+        <div class="flex items-center gap-3 text-slate-500">
+          <button class="p-1 hover:text-slate-700">📖</button>
+          <button class="p-1 hover:text-slate-700">🌐</button>
+          <div class="flex items-center gap-1.5 text-sm">
+            <div class="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center">👤</div>
+            <span>系統</span>
           </div>
-          <button type="submit" class="w-full bg-slate-800 text-white rounded-lg py-2 text-sm hover:bg-slate-700">
-            儲存參數
-          </button>
-        </form>
-      </div>
+        </div>
+      </header>
 
-      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
-        <h2 class="text-lg font-semibold">索引資料夾</h2>
-        <p class="text-xs text-slate-500">
-          支援副檔名：<span class="font-mono">{{ supported_exts|join(' ') }}</span>
-        </p>
-        <form id="indexForm" class="space-y-3">
-          <label class="block">
-            <span class="text-sm text-slate-600">資料夾路徑</span>
-            <input name="folder" value="./data/docs" required class="mt-1 w-full border rounded-lg p-2 text-sm" />
-          </label>
-          <div class="flex gap-2">
-            <button type="submit" class="flex-1 bg-indigo-600 text-white rounded-lg py-2 text-sm hover:bg-indigo-500">
-              開始索引
-            </button>
-            <button type="button" id="dropBtn" class="bg-rose-600 text-white rounded-lg py-2 px-3 text-sm hover:bg-rose-500">
-              清空 Collection
-            </button>
+      <main class="flex-1 p-6 space-y-6">
+        <!-- Stats banner -->
+        <div id="stats" class="bg-white rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-600 flex items-center gap-4">
+          <span class="pill bg-amber-50 text-amber-700 px-2.5 py-0.5 text-xs">狀態</span>
+          <span>載入中…</span>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6">
+          <!-- 基本設定 -->
+          <section class="bg-white rounded-lg border border-slate-200 p-6">
+            <div class="flex items-center gap-2 mb-5">
+              <div class="w-1 h-5 bg-amber-400 rounded"></div>
+              <h2 class="text-base font-semibold">基本設定</h2>
+            </div>
+            <form id="configForm" class="space-y-4">
+              <div>
+                <label class="field-label text-sm text-slate-700 block mb-1">DB 檔案路徑</label>
+                <input name="db_path" value="{{ config.db_path }}"
+                  class="w-full border border-slate-300 rounded-md px-3 py-2 text-sm bg-slate-50 focus:bg-white focus:border-amber-400 focus:ring-1 focus:ring-amber-300 outline-none" />
+              </div>
+              <div>
+                <label class="field-label text-sm text-slate-700 block mb-1">Collection 名稱</label>
+                <input name="collection" value="{{ config.collection }}"
+                  class="w-full border border-slate-300 rounded-md px-3 py-2 text-sm bg-slate-50 focus:bg-white focus:border-amber-400 focus:ring-1 focus:ring-amber-300 outline-none" />
+              </div>
+              <div>
+                <label class="field-label text-sm text-slate-700 block mb-1">Embedding Model</label>
+                <input name="embedding_model" value="{{ config.embedding_model }}"
+                  class="w-full border border-slate-300 rounded-md px-3 py-2 text-sm bg-slate-50 focus:bg-white focus:border-amber-400 focus:ring-1 focus:ring-amber-300 outline-none" />
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="field-label text-sm text-slate-700 block mb-1">Chunk Size</label>
+                  <input type="number" min="50" name="chunk_size" value="{{ config.chunk_size }}"
+                    class="w-full border border-slate-300 rounded-md px-3 py-2 text-sm bg-slate-50 focus:bg-white focus:border-amber-400 focus:ring-1 focus:ring-amber-300 outline-none" />
+                </div>
+                <div>
+                  <label class="field-label text-sm text-slate-700 block mb-1">Chunk Overlap</label>
+                  <input type="number" min="0" name="chunk_overlap" value="{{ config.chunk_overlap }}"
+                    class="w-full border border-slate-300 rounded-md px-3 py-2 text-sm bg-slate-50 focus:bg-white focus:border-amber-400 focus:ring-1 focus:ring-amber-300 outline-none" />
+                </div>
+              </div>
+              <div>
+                <label class="field-label optional text-sm text-slate-700 block mb-1">支援副檔名</label>
+                <div class="flex flex-wrap gap-1.5">
+                  {% for ext in supported_exts %}
+                    <span class="pill bg-slate-100 text-slate-600 text-xs px-2.5 py-1 font-mono">{{ ext }}</span>
+                  {% endfor %}
+                </div>
+              </div>
+              <button type="submit"
+                class="w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-medium rounded-md py-2.5 text-sm transition">
+                儲存參數
+              </button>
+            </form>
+          </section>
+
+          <!-- 規則設定 / 索引 -->
+          <section class="bg-white rounded-lg border border-slate-200 p-6">
+            <div class="flex items-center gap-2 mb-5">
+              <div class="w-1 h-5 bg-amber-400 rounded"></div>
+              <h2 class="text-base font-semibold">規則設定</h2>
+            </div>
+
+            <form id="indexForm" class="space-y-4">
+              <div>
+                <label class="field-label text-sm text-slate-700 block mb-1">資料夾路徑</label>
+                <input name="folder" value="./data/docs" required
+                  class="w-full border border-slate-300 rounded-md px-3 py-2 text-sm bg-slate-50 focus:bg-white focus:border-amber-400 focus:ring-1 focus:ring-amber-300 outline-none" />
+              </div>
+
+              <div>
+                <label class="field-label text-sm text-slate-700 block mb-1">索引策略</label>
+                <div class="border border-amber-300 rounded-md divide-y divide-slate-100 bg-white">
+                  <div class="model-option selected px-4 py-3 cursor-pointer">
+                    <div class="flex justify-between items-center">
+                      <span class="name text-sm">semantic-chunk</span>
+                      <span class="text-xs text-amber-500">●</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-0.5">依語意分塊，適合中長文檔，保留段落上下文。</p>
+                  </div>
+                  <div class="model-option px-4 py-3 cursor-pointer">
+                    <div class="flex justify-between items-center">
+                      <span class="name text-sm">fixed-window</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-0.5">固定視窗切割，速度最快，適合短文與結構化資料。</p>
+                  </div>
+                  <div class="model-option px-4 py-3 cursor-pointer">
+                    <div class="flex justify-between items-center">
+                      <span class="name text-sm">overlap-sliding</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-0.5">滑動視窗加重疊，能在邊界保留更多上下文資訊。</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex gap-3">
+                <button type="submit"
+                  class="flex-1 bg-slate-800 hover:bg-slate-700 text-white rounded-md py-2.5 text-sm transition">
+                  開始索引
+                </button>
+                <button type="button" id="dropBtn"
+                  class="px-4 bg-white border border-rose-300 text-rose-600 hover:bg-rose-50 rounded-md py-2.5 text-sm transition">
+                  清空 Collection
+                </button>
+              </div>
+            </form>
+
+            <pre id="indexResult"
+              class="mt-4 bg-slate-900 text-slate-100 text-xs rounded-md p-3 max-h-48 overflow-auto hidden"></pre>
+          </section>
+        </div>
+
+        <!-- 查詢 -->
+        <section class="bg-white rounded-lg border border-slate-200 p-6">
+          <div class="flex items-center gap-2 mb-5">
+            <div class="w-1 h-5 bg-amber-400 rounded"></div>
+            <h2 class="text-base font-semibold">查詢測試</h2>
           </div>
-        </form>
-        <pre id="indexResult" class="bg-slate-900 text-slate-100 text-xs rounded-lg p-3 max-h-48 overflow-auto hidden"></pre>
-      </div>
-    </section>
-
-    <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
-      <h2 class="text-lg font-semibold">查詢</h2>
-      <form id="queryForm" class="flex flex-col md:flex-row gap-3">
-        <input name="q" placeholder="輸入查詢字串…" required class="flex-1 border rounded-lg p-2 text-sm" />
-        <input type="number" name="top_k" value="5" min="1" max="50" class="w-24 border rounded-lg p-2 text-sm" />
-        <button type="submit" class="bg-emerald-600 text-white rounded-lg px-4 py-2 text-sm hover:bg-emerald-500">
-          查詢
-        </button>
-      </form>
-      <div id="results" class="space-y-3"></div>
-    </section>
+          <form id="queryForm" class="flex flex-col md:flex-row gap-3">
+            <input name="q" placeholder="輸入查詢字串…" required
+              class="flex-1 border border-slate-300 rounded-md px-3 py-2 text-sm bg-slate-50 focus:bg-white focus:border-amber-400 focus:ring-1 focus:ring-amber-300 outline-none" />
+            <input type="number" name="top_k" value="5" min="1" max="50"
+              class="w-24 border border-slate-300 rounded-md px-3 py-2 text-sm bg-slate-50 focus:bg-white focus:border-amber-400 focus:ring-1 focus:ring-amber-300 outline-none" />
+            <button type="submit"
+              class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-medium rounded-md px-6 py-2 text-sm transition">
+              查詢
+            </button>
+          </form>
+          <div id="results" class="space-y-3 mt-4"></div>
+        </section>
+      </main>
+    </div>
   </div>
+
+  <div class="floating-chat" title="AI 助手">💬</div>
 
 <script>
 const toast = (msg, ok = true) => {
   const el = document.createElement('div');
   el.textContent = msg;
-  el.className = `fixed bottom-4 right-4 text-sm text-white px-3 py-2 rounded-lg shadow ${ok ? 'bg-emerald-600' : 'bg-rose-600'}`;
+  el.className = `fixed bottom-20 right-6 text-sm text-white px-4 py-2 rounded-md shadow-lg ${ok ? 'bg-emerald-600' : 'bg-rose-600'}`;
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 2500);
 };
@@ -98,12 +231,24 @@ const toast = (msg, ok = true) => {
 async function refreshStats() {
   try {
     const r = await fetch('/api/stats').then(r => r.json());
-    document.getElementById('stats').textContent =
-      `Collection: ${r.collection} · 狀態: ${r.exists ? '存在' : '尚未建立'} · 筆數: ${r.count ?? 0}`;
+    document.getElementById('stats').innerHTML =
+      `<span class="pill bg-amber-50 text-amber-700 px-2.5 py-0.5 text-xs">狀態</span>
+       <span>Collection: <b>${r.collection}</b></span>
+       <span class="text-slate-300">|</span>
+       <span>${r.exists ? '<span class="text-emerald-600">● 已建立</span>' : '<span class="text-slate-400">○ 尚未建立</span>'}</span>
+       <span class="text-slate-300">|</span>
+       <span>筆數: <b>${r.count ?? 0}</b></span>`;
   } catch (e) {
     document.getElementById('stats').textContent = '無法讀取狀態';
   }
 }
+
+document.querySelectorAll('.model-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    document.querySelectorAll('.model-option').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+  });
+});
 
 document.getElementById('configForm').addEventListener('submit', async (ev) => {
   ev.preventDefault();
@@ -144,18 +289,21 @@ document.getElementById('queryForm').addEventListener('submit', async (ev) => {
   const box = document.getElementById('results');
   box.innerHTML = '';
   if (!r.results || r.results.length === 0) {
-    box.innerHTML = '<p class="text-sm text-slate-500">沒有結果</p>';
+    box.innerHTML = '<p class="text-sm text-slate-500 text-center py-6">沒有結果</p>';
     return;
   }
   r.results.forEach((hit, i) => {
     const card = document.createElement('div');
-    card.className = 'border border-slate-200 rounded-lg p-3 bg-slate-50';
+    card.className = 'border border-slate-200 rounded-md p-4 bg-slate-50 hover:border-amber-300 transition';
     card.innerHTML = `
-      <div class="flex justify-between text-xs text-slate-500 mb-1">
-        <span>#${i + 1} · ${hit.source}</span>
-        <span>score: ${hit.score.toFixed(4)}</span>
+      <div class="flex justify-between text-xs text-slate-500 mb-2">
+        <span class="flex items-center gap-2">
+          <span class="pill bg-amber-100 text-amber-700 px-2 py-0.5">#${i + 1}</span>
+          <span>${hit.source}</span>
+        </span>
+        <span class="font-mono">score: ${hit.score.toFixed(4)}</span>
       </div>
-      <pre class="text-xs whitespace-pre-wrap text-slate-800">${hit.text.replace(/</g, '&lt;')}</pre>
+      <pre class="text-xs whitespace-pre-wrap text-slate-700 leading-relaxed">${hit.text.replace(/</g, '&lt;')}</pre>
     `;
     box.appendChild(card);
   });

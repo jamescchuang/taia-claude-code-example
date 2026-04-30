@@ -196,3 +196,6 @@ Memory is one of several persistence mechanisms available to you as you assist t
 
 Your MEMORY.md is currently empty. When you save new memories, they will appear here.
 
+## Humanizer
+
+run humanizer-zh-tw skill on content created by this agent before saving it to file to remove AI-generated text patterns and make it sound more natural and human-written.
